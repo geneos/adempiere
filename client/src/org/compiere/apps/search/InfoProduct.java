@@ -111,9 +111,17 @@ public class InfoProduct extends Info implements ActionListener, ChangeListener
 		int no = p_table.getRowCount();
 		setStatusLine(Integer.toString(no) + " " + Msg.getMsg(Env.getCtx(), "SearchRows_EnterQuery"), false);
 		setStatusDB(Integer.toString(no));
+		
+
 		//	AutoQuery
 		if (value != null && value.length() > 0)
 			executeQuery();
+		else 
+		{
+			initialId = Env.getContextAsInt(Env.getCtx(), WindowNo, "M_Product_ID");
+			if ( initialId > 0 )
+				executeQuery();
+		}
 		p_loadedOK = true;
 		//	Focus
 		fieldValue.requestFocus();
@@ -687,6 +695,13 @@ public class InfoProduct extends Info implements ActionListener, ChangeListener
 	{
 		StringBuffer where = new StringBuffer();
 		
+		//initial query
+		if ( initialId > 0 )
+		{
+			where.append(" AND p.M_Product_ID=?");
+			return where.toString();
+		}
+		
 		//	Optional PLV
 		int M_PriceList_Version_ID = 0;
 		KeyNamePair pl = (KeyNamePair)pickPriceList.getSelectedItem();
@@ -766,6 +781,14 @@ public class InfoProduct extends Info implements ActionListener, ChangeListener
 		}
 		log.fine("M_Warehouse_ID=" + M_Warehouse_ID + " (" + (index-1) + "*)");
 
+		//initial query
+		if ( initialId > 0 )
+		{
+			pstmt.setInt(index++, initialId);
+			log.fine("M_Product_ID=" + initialId);
+			return;
+		}
+		
 		//  => PriceList
 		int M_PriceList_Version_ID = 0;
 		KeyNamePair pl = (KeyNamePair)pickPriceList.getSelectedItem();

@@ -355,6 +355,9 @@ public abstract class Info extends CDialog
 	private int					m_SO_Window_ID = -1;
 	/**	PO Zoom Window						*/
 	private int					m_PO_Window_ID = -1;
+	
+	/** Initial ID value from context */
+	protected int initialId = 0;
 
 	/** Worker                  */
 	private Worker              m_worker = null;
@@ -1165,6 +1168,7 @@ public abstract class Info extends CDialog
 			{
 				m_pstmt = DB.prepareStatement(dataSql, null);
 				setParameters (m_pstmt, false);	//	no count
+				initialId = 0; // clear initial query;
 				log.fine("Start query - " + (System.currentTimeMillis()-start) + "ms");
 				m_rs = m_pstmt.executeQuery();
 				log.fine("End query - " + (System.currentTimeMillis()-start) + "ms");
