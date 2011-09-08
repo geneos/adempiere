@@ -4,7 +4,7 @@
 	<artifactId>adempiere-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>ADempiere ERP</name>
-	<version>0.0.1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 	<repositories>
 	</repositories>
