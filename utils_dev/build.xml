@@ -1,175 +1,299 @@
-<!-- ================================================ -->
-<!-- Adempiere Build                                   -->
-<!-- ================================================ -->
-<!-- $Header: /cvs/adempiere/utils_dev/build.xml,v 1.4 2006/10/12 00:03:11 jjanke Exp $ -->
-<project name="adempiere" default="complete" basedir="../">
-	<description>
-    This buildfile is used to build the Adempiere system.
-  </description>
-	<!-- set global properties for this build -->
-	<!--<property environment="env"/>-->
-  <import file="./properties.xml"/>
-	<property name="src" value="src"/>
-	<property name="build.dir" value="build"/>
-	<target name="init" description="initialization target">
-		<echo message="=========== Build Adempiere - ${env.ENCODING}"/>
-		<!-- Create the time stamp -->
-		<tstamp/>
-	</target>
-	<target name="jar" depends="init">
-		<ant inheritAll="false" dir="tools"/>
-		<ant inheritAll="false" dir="base"/>
-		<ant inheritAll="false" dir="extend"/>
-		<ant inheritAll="false" dir="client"/>
-		<ant inheritAll="false" dir="JasperReports"/>
-		<ant inheritAll="false" dir="JasperReportsWebApp"/>
-		<ant inheritAll="false" dir="serverRoot"/>
-		<ant inheritAll="false" dir="serverApps"/>
-		<ant inheritAll="false" dir="webStore"/>
-		<ant inheritAll="false" dir="webCM"/>
-		<ant inheritAll="false" dir="sqlj"/>
-		<ant inheritAll="false" dir="posterita/posterita"/>
-		<ant inheritAll="false" dir="zkwebui"/>
-	</target>
-	<target name="build" depends="jar">
-		<ant inheritAll="false" dir="install"/>		
-	</target>	
-	<target name="clean">
-		<ant inheritAll="false" dir="tools" target="clean"/>
-		<ant inheritAll="false" dir="base" target="clean"/>
-		<ant inheritAll="false" dir="extend" target="clean"/>
-		<ant inheritAll="false" dir="JasperReports" target="clean"/>
-		<ant inheritAll="false" dir="JasperReportsWebApp" target="clean"/>
-		<ant inheritAll="false" dir="client" target="clean"/>
-		<ant inheritAll="false" dir="serverRoot" target="clean"/>
-		<ant inheritAll="false" dir="serverApps" target="clean"/>
-		<ant inheritAll="false" dir="webStore" target="clean"/>
-		<ant inheritAll="false" dir="webCM" target="clean"/>
-		<ant inheritAll="false" dir="sqlj" target="clean"/>
-		<ant inheritAll="false" dir="posterita/posterita" target="clean"/>
-		<ant inheritAll="false" dir="install" target="clean"/>
-		<ant inheritAll="false" dir="zkwebui" target="clean"/>
-	</target>
+<?xml version="1.0" encoding="utf-8"?>
 
-  <target name="clean-all" depends="clean">
-    <delete dir="${env.ADEMPIERE_ROOT}"/>
+
+<!--
+==============================================================================
+Ant file to build the ADempiere project
+==============================================================================
+-->
+<project name="adempiere"
+         default="build"
+         basedir="../">
+
+  <import file="properties.xml"/>
+
+  <property name="dbStartup.dir"  value="db/database/Startup"/>
+  <property name="data.dir"       value="data"/>
+  <property name="glassfish.dir"  value="glassfishfacet"/>
+  <property name="install.dir"    value="install"/>
+  <property name="jboss.dir"      value="jboss"/>
+  <property name="launch.dir"     value="launch"/>
+  <property name="lib.dir"        value="lib"/>
+  <property name="packages.dir"   value="packages"/>
+  <property name="sqlj.dir"       value="sqlj"/>
+  <property name="utils.dir"      value="utils"/>
+  <property name="zkpackages.dir" value="zkpackages"/>
+
+  <property name="build.dir"      value="build"/>
+
+
+  <!--
+  ==============================================================================
+  Sets the timestamp ant creates the output directory
+  ==============================================================================
+  -->
+  <target name="init">
+
+    <echo>======================================================================</echo>
+    <echo>Building ADempiere</echo>
+    <echo>======================================================================</echo>
+
+    <tstamp/>
+
+    <mkdir dir="${build.dir}"/>
+
   </target>
 
-    <target name="update-adempiere-jar" depends="init">
-		<ant inheritAll="false" dir="base" target="compile"/>
-		<ant inheritAll="false" dir="extend" target="compile"/>
-		<ant inheritAll="false" dir="client"/>
-	</target>
-	
-	<target name="update-serverRoot" depends="init">
-		<ant inheritAll="false" dir="serverRoot"/>
-	</target>
-	
-	<!-- ================================================ -->
-	<!-- Adempiere Local Install                           -->
-	<!-- ================================================ -->
-	<target name="install" depends="" description="Environment dependent">
-		<echo message="=========== Install Adempiere"/>
-		<copy todir="${env.ADEMPIERE_INSTALL}" verbose="true">
-			<fileset dir="install/build" includes="Adempiere_*"/>
-		</copy>
-		<!-- Delete Existing stuff, but not utils + data 	-->
-		<delete failonerror="false">
-			<fileset dir="${env.ADEMPIERE_HOME}/lib"/>
-			<fileset dir="${env.ADEMPIERE_HOME}/jboss"/>
-		</delete>
-		<!-- Unzip Install File			-->
-		<unzip src="install/build/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip" 
-			dest="${env.ADEMPIERE_ROOT}" 
-			overwrite="yes"/>
-		<!-- Run Setup				-->
-		<!--
-		<input addproperty="runSetupInput" 
-			message="Run Setup(Y/N) ? " 
-			validargs="Y,y,N,n"/>
-		
-		<antcall target="runSetup"/>
-		-->
-	</target>
-	
-	<!-- ================================================ -->
-	<!-- Adempiere Local Update                           -->
-	<!-- ================================================ -->
-	<target name="updateDeploy" depends="" description="Environment dependent">
-		<echo message="=========== Update Adempiere"/>
-		<copy todir="${env.ADEMPIERE_INSTALL}">
-			<fileset dir="install/build" includes="Adempiere_*"/>
-		</copy>
-		<!-- Unzip Install File			-->
-		<unzip src="install/build/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip" 
-			dest="${env.ADEMPIERE_ROOT}" 
-			overwrite="yes"/>
-		<!-- Run Setup				-->
-		<antcall target="runUpdateWin"></antcall>
-		<antcall target="runUpdateNonWin"></antcall>
-	</target>
-	
-	<target name="runSetupInit">
-		<condition property="isWindows">
-			<os family="windows" />
-		</condition>
-	</target>
-	
-	<target name="runSetupWin" depends="runSetupInit" if="isWindows" >
-		<exec dir="${env.ADEMPIERE_HOME}" executable="RUN_setup.bat" 
-			spawn="false" resolveexecutable="true">
-		</exec>
-	</target>
-	
-  <target name="runSetupNonWin" depends="runSetupInit" unless="isWindows" >
-    <chmod dir="${env.ADEMPIERE_HOME}" perm="ugo+rx" includes="RUN_setup.sh"/>
-		<exec dir="${env.ADEMPIERE_HOME}" executable="RUN_setup.sh" 
-			spawn="false" resolveexecutable="true">
-		</exec>
-	</target>
-	
-	<target name="runSetupCheck">
-		<condition property="setup.yes">
-			<or>
-				<equals arg1="y" arg2="${runSetupInput}"/>
-				<equals arg1="Y" arg2="${runSetupInput}"/>
-			</or>
-		</condition>
-	</target>
-	
-	<target name="runSetup" depends="runSetupCheck" if="setup.yes">
-		<antcall target="runSetupWin"></antcall>
-		<antcall target="runSetupNonWin"></antcall>
-	</target>
 
-	<target name="runUpdateWin" depends="runSetupInit" if="isWindows" >
-		<exec dir="${env.ADEMPIERE_HOME}" executable="RUN_update.bat" 
-			spawn="false" resolveexecutable="true">
-		</exec>
-	</target>
-	
-  <target name="runUpdateNonWin" depends="runSetupInit" unless="isWindows" >
-    <chmod dir="${env.ADEMPIERE_HOME}" perm="ugo+rx" includes="RUN_update.sh"/>
-		<exec dir="${env.ADEMPIERE_HOME}" executable="RUN_update.sh" 
-			spawn="false" resolveexecutable="true">
-		</exec>
-	</target>
+  <!--
+  ==============================================================================
+  Builds ADempiere by invoking the Ant build files of the subprojects
+  ==============================================================================
+  -->
+  <target name="build-subprojects"
+          depends="init">
+    <ant dir="tools"         inheritAll="false"/>
+    <ant dir="base"          inheritAll="false"/>
+    <ant dir="extend"        inheritAll="false"/>
+    <ant dir="client"        inheritAll="false"/>
+    <ant dir="JasperReports" inheritAll="false"/>
+    <ant dir="serverRoot"    inheritAll="false"/>
+    <ant dir="serverApps"    inheritAll="false"/>
+    <ant dir="webStore"      inheritAll="false"/>
+    <ant dir="webCM"         inheritAll="false"/>
+    <ant dir="sqlj"          inheritAll="false"/>
+    <ant dir="posterita"     inheritAll="false"/>
+    <ant dir="zkwebui"       inheritAll="false"/>
+    <ant dir="install"       inheritAll="false"/>
+  </target>
 
-	<!-- ================================================ -->
-	<!-- complete                                         -->
-	<!-- ================================================ -->
-	<target name="complete" depends="build, install">
-	</target>
-	
-	<!-- ================================================ -->
-	<!-- update                                           -->
-	<!-- ================================================ -->
-	<target name="update" depends="build, updateDeploy">
-	</target>
 
-	<!-- ================================================ -->
-	<!-- Transfer Install                                 -->
-	<!-- ================================================ -->
-	<target name="transfer" depends="complete" description="Transfer to Distribution media">
-	</target>
+  <!--
+  ==============================================================================
+  Deletes all files created by the Ant build files of the subprojects
+  ==============================================================================
+  -->
+  <target name="clean-subprojects">
+    <ant dir="tools"         target="clean" inheritAll="false"/>
+    <ant dir="base"          target="clean" inheritAll="false"/>
+    <ant dir="extend"        target="clean" inheritAll="false"/>
+    <ant dir="client"        target="clean" inheritAll="false"/>
+    <ant dir="JasperReports" target="clean" inheritAll="false"/>
+    <ant dir="serverRoot"    target="clean" inheritAll="false"/>
+    <ant dir="serverApps"    target="clean" inheritAll="false"/>
+    <ant dir="webStore"      target="clean" inheritAll="false"/>
+    <ant dir="webCM"         target="clean" inheritAll="false"/>
+    <ant dir="sqlj"          target="clean" inheritAll="false"/>
+    <ant dir="posterita"     target="clean" inheritAll="false"/>
+    <ant dir="install"       target="clean" inheritAll="false"/>
+    <ant dir="zkwebui"       target="clean" inheritAll="false"/>
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Creates the output structure of the ADempiere project
+  ==============================================================================
+  -->
+  <target name="create-output-structure"
+          depends="init">
+
+    <copy todir="${build.dir}/Adempiere">
+      <fileset dir="${install.dir}/Adempiere">
+        <include name="**/*"/>
+      </fileset>
+      <fileset dir="${utils.dir}">
+        <include name="RUN_Adempiere.bat"/>
+        <include name="RUN_Adempiere.sh"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/data/">
+      <fileset dir="${data.dir}/seed/">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+
+    <unjar src="${data.dir}/seed/Adempiere.jar"
+           dest="${build.dir}/Adempiere/data"/>
+
+    <unjar src="${data.dir}/seed/Adempiere_pg.jar"
+           dest="${build.dir}/Adempiere/data"/>
+
+    <copy todir="${build.dir}/Adempiere/data/import">
+      <fileset dir="${data.dir}/import">
+        <include name="**/Accounting*.*"/>
+        <include name="Example*.csv"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/glassfish">
+      <fileset dir="${glassfish.dir}/config"/>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/jboss/bin">
+      <fileset dir="${jboss.dir}/bin"/>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/jboss/lib">
+      <fileset dir="${jboss.dir}/lib"/>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/jboss/server">
+      <fileset dir="${jboss.dir}/server"/>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/lib">
+      <fileset dir="${lib.dir}">
+        <include name="Adempiere.jar"/>
+        <include name="adempiereAll.xml"/>
+        <include name="adempiereApps.jar"/>
+        <include name="adempiereApps.war"/>
+        <include name="adempiereApps.xml"/>
+        <include name="adempiereRoot.jar"/>
+        <include name="adempiereRoot.xml"/>
+        <include name="adempiereRootBase.war"/>
+        <include name="adempiereWebCM.xml"/>
+        <include name="adempiereWebCMbase.war"/>
+        <include name="adempiereWebStore.war"/>
+        <include name="adempiereWebStore.xml"/>
+        <include name="CCTools.jar"/>
+        <include name="CheckConflicts.sh"/>
+        <include name="CInstall.jar"/>
+        <include name="CompiereJasper.jar"/>
+        <include name="CompiereJasperReqs.jar"/>
+        <include name="CSTools.jar"/>
+        <include name="customization.jar"/>
+        <include name="glassfish.jar"/>
+        <include name="jboss.jar"/>
+        <include name="mysql-connector-java-5.1.13-bin.jar"/>
+        <include name="oracle.jar"/>
+        <include name="patches.jar"/>
+        <include name="posterita.war"/>
+        <include name="posterita.xml"/>
+        <include name="postgresql.jar"/>
+        <include name="sqlj.jar"/>
+        <include name="tomcatServerTemplate.xml"/>
+        <include name="webui.war"/>
+        <include name="zkcustomization.jar"/>
+        <include name="zkpatches.jar"/>
+      </fileset>
+      <fileset dir="${launch.dir}">
+        <include name="Adempiere.ico"/>
+      </fileset>
+      <fileset dir="${launch.dir}/Release">
+        <include name="Adempiere.exe"/>
+      </fileset>
+    </copy>
+
+    <concat destfile="${build.dir}/Adempiere/lib/index.html">AdempiereHome</concat>
+
+    <copy todir="${build.dir}/Adempiere/packages/liberoHR/lib">
+      <fileset dir="${packages.dir}">
+        <include name="liberoHR.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/packages/liberoMFG/lib">
+      <fileset dir="${packages.dir}">
+        <include name="liberoMFG.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/utils">
+      <fileset dir="${utils.dir}">
+        <exclude name=".project"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/utils/oracle">
+      <fileset dir="${dbStartup.dir}/oracle"/>
+      <fileset dir="${sqlj.dir}/oracle"/>
+      <fileset dir="${utils.dir}/oracle"/>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/utils/postgresql">
+      <fileset dir="${dbStartup.dir}/postgresql">
+        <include name="*.sql"/>
+      </fileset>
+      <fileset dir="${sqlj.dir}/postgresql/"/>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/utils/oracleXE">
+      <fileset dir="${dbStartup.dir}/oracleXE">
+        <include name="*.sql"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.dir}/Adempiere/zkpackages/liberoMFG/lib">
+      <fileset dir="${zkpackages.dir}">
+        <include name="liberozkMFG.jar"/>
+      </fileset>
+    </copy>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Creates zip and tar archives containing the ADempiere output structure
+  ==============================================================================
+  -->
+  <target name="create-archives">
+
+    <zip zipfile="${build.dir}/install/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip"
+         basedir="${build.dir}"
+         includes="Adempiere/**"/>
+
+    <tar longfile="gnu"
+         tarfile="${build.dir}/install/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz"
+         basedir="${build.dir}"
+         includes="Adempiere/**"
+         compression="gzip" />
+
+    <checksum file="${build.dir}/install/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz"/>
+    <concat destfile="${build.dir}/install/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz.MD5"
+            append="yes"> *Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz</concat>
+
+    <checksum file="${build.dir}/install/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip"/>
+    <concat destfile="${build.dir}/install/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip.MD5"
+            append="yes"> *Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip</concat>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Invokes the necessary targets to create a build of ADempiere
+  ==============================================================================
+  -->
+
+  <target name="build"
+          depends="build-subprojects,
+                   create-output-structure,
+                   create-archives"/>
+
+
+  <!--
+  ==============================================================================
+  Recreates the output files of the entire project
+  ==============================================================================
+  -->
+  <target name="rebuild"
+          depends="clean,
+                   build"/>
+
+
+  <!--
+  ==============================================================================
+  Deletes all files created by all ADempiere subprojects
+  ==============================================================================
+  -->
+  <target name="clean"
+          depends="clean-subprojects">
+
+    <delete dir="${build.dir}"/>
+
+  </target>
+
 </project>

@@ -1,67 +1,84 @@
-<?xml version="1.0"?>
-<!-- ============================================= -->
-<!-- Adempiere Server Application                   -->
-<!-- ============================================= -->
-<!-- $Header: /cvs/adempiere/serverApps/build.xml,v 1.14 2006/08/07 18:23:48 possibilityforge Exp $-->
+<?xml version="1.0" encoding="utf-8"?>
 
-<project name="adempiereApps" default="main" basedir=".">
 
-  <!--<property environment="env"/>-->
+<!--
+==============================================================================
+Ant file to build the ADempiere "serverApps" subproject
+==============================================================================
+-->
+<project name="serverApps"
+         default="build"
+         basedir=".">
+
   <import file="../utils_dev/properties.xml"/>
 
-  <property name="src.dir" value="${basedir}/src"/>
-  <property name="src.main.dir" value="${src.dir}/main"/>
-  <property name="src.client.dir" value="${src.main.dir}/client"/>
-  <property name="src.ejb.dir" value="${src.main.dir}/ejb"/>
-  <property name="src.servlet.dir" value="${src.main.dir}/servlet"/>
-  <property name="src.resources.dir" value="${src.dir}/resources"/>
-  <property name="src.web.dir" value="${src.dir}/web"/>
-  <property name="src.etc.dir" value="${src.dir}/etc"/>
-  <property name="src.server.dir" value="${src.main.dir}/server"/>
+  <property name="src.dir"   value="src"/>
+  <property name="build.dir" value="build"/>
+  <property name="dist.dir"  value="../lib"/>
 
-  <property name="build.dir" value="${basedir}/build"/>
-  <property name="build.tmp.dir" value="${build.dir}/tmp"/>
-  <property name="build.deploy.dir" value="${build.dir}/deploy"/>
-  <property name="build.war.dir" value="${build.dir}/war"/>
-  <property name="build.jar.dir" value="${build.dir}/jar"/>
+  <property name="jar" value="${dist.dir}/adempiereApps.jar"/>
+  <property name="war" value="${dist.dir}/adempiereApps.war"/>
 
-  <target name="serverAppsInit">
-    <echo message="=========== Build Server Application"/>
+  <path id="project.classpath">
+    <pathelement location="../lib/Adempiere.jar"/>
+    <pathelement location="../lib/CSTools.jar"/>
+    <pathelement location="../tools/lib/servlet-api.jar"/>
+    <pathelement location="../tools/lib/jsp-api.jar"/>
+  </path>
+
+  <pathconvert refid="project.classpath"
+               property="jar.classpath"
+               pathsep=" ">
+    <flattenmapper/>
+  </pathconvert>
+
+
+  <!--
+  ==============================================================================
+  Sets the timestamp and checks if the files need to be compiled at all
+  ==============================================================================
+  -->
+  <target name="init">
+
+    <echo>======================================================================</echo>
+    <echo>Building ADempiere subproject "serverRoot"</echo>
+    <echo>======================================================================</echo>
+
     <tstamp/>
+
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+
+    <uptodate property="jar.uptodate"
+              targetfile="${jar}">
+      <srcfiles dir="${src.dir}"
+                includes="**/*.java"/>
+    </uptodate>
+
   </target>
 
 
-  <path id="base.path">
-    <pathelement location="../lib/Adempiere.jar" />
-    <pathelement location="../lib/CSTools.jar" />
-    <pathelement location="../tools/lib/servlet-api.jar" />
-  	<pathelement location="../tools/lib/jsp-api.jar" />
-  </path>
+  <!--
+  ==============================================================================
+  Compiles the .java files into .class files
+  ==============================================================================
+  -->
+  <target name="compile"
+          depends="init"
+          unless="jar.uptodate">
 
-  <!-- =========================================== -->
-  <!-- Compiles the source code                    -->
-  <!-- =========================================== -->
-  <target name="serverAppsCompile" depends="serverAppsInit">
+    <javac srcdir="${src.dir}/main/servlet"
+           destdir="${build.dir}"
+           target="${compile.version}"
+           debug="${compile.debug}"
+           optimize="${compile.optimize}"
+           deprecation="${compile.deprecation}"
+           includeAntRuntime="false"
+           classpathref="project.classpath"/>
 
-    <!--	Compile Web		-->
-    <mkdir dir="${build.war.dir}"/>
-    <path id="web.path">
-      <path refid="base.path"/>
-      <pathelement location="${servlet-lib.path}"/>
-    </path>
-  	
-    <javac
-      target="1.5" 
-	  destdir="${build.war.dir}"
-	  debug="on"
-	  deprecation="off"
-	  optimize="on"
-	  classpathref="web.path">
-      <src path="${src.servlet.dir}"/>
-    </javac>
-  	
-    <copy todir="${build.war.dir}">
-      <fileset dir="${src.servlet.dir}">
+    <copy todir="${build.dir}"
+          verbose="true">
+      <fileset dir="${src.dir}/main/servlet">
         <include name="**/images/*"/>
         <include name="**/*.gif"/>
         <include name="**/*.jpg"/>
@@ -75,86 +92,89 @@
 
   </target>
 
-  <!-- =========================================== -->
-  <!-- Creates the jar archives                    -->
-  <!-- =========================================== -->
-  <target name="serverAppsJar" depends="serverAppsCompile">
-    <mkdir dir="${build.jar.dir}"/>
 
-    <!--	Jar Apps Code			-->
-    <jar
-	  jarfile="${build.jar.dir}/adempiereApps.jar">
-      <fileset
-	    dir="${build.war.dir}"
-	    includes="**/*.*">
-      </fileset>
+  <!--
+  ==============================================================================
+  Builds the Java Archive containing the compiled classes
+  ==============================================================================
+  -->
+  <target name="jar"
+          depends="compile"
+          unless="jar.uptodate">
+
+    <jar jarfile="${jar}"
+         compress="${compile.compress}"
+         basedir="${build.dir}">
       <manifest>
-		<attribute name="Specification-Title" value="AdempiereApps"/>
-		<attribute name="Specification-Version" value="${env.ADEMPIERE_VERSION}"/>
-		<attribute name="Specification-Vendor" value="Adempiere"/>
-		<attribute name="Implementation-Title" value="AdempiereApps ${env.ADEMPIERE_VERSION}"/>
-		<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}"/>
-		<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}"/>
-		<attribute name="Implementation-URL" value="http://www.adempiere.com"/>
-		<attribute name="Class-Path" value="Adempiere.jar AdempiereSLib.jar"/>
+        <attribute name="Specification-Title"    value="serverApps"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="adempiereApps.jar"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+        <attribute name="Class-Path"             value="${jar.classpath}"/>
       </manifest>
     </jar>
 
   </target>
 
-  <!-- =========================================== -->
-  <!-- Creates the war archives                    -->
-  <!-- =========================================== -->
-  <target name="serverAppsWar" depends="serverAppsJar">
-    <mkdir dir="${build.deploy.dir}"/>
 
-    <!--	War Web Descriptor		-->
-  	<war
-  		  warfile="${build.deploy.dir}/adempiereApps.war"
-  		  webxml="${src.web.dir}/WEB-INF/web.xml">
-  	      <fileset dir="${src.web.dir}" excludes="**/web.xml,**/classes/**"/>
-  	      <manifest>
-  			<attribute name="Specification-Title" value="AdempiereAppsWar"/>
-  			<attribute name="Specification-Version" value="${env.ADEMPIERE_VERSION}"/>
-  			<attribute name="Specification-Vendor" value="Adempiere"/>
-  			<attribute name="Implementation-Title" value="AdempiereAppsWar ${env.ADEMPIERE_VERSION}"/>
-  			<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}"/>
-  			<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}"/>
-  			<attribute name="Implementation-URL" value="http://www.adempiere.com"/>
-  			<attribute name="Class-Path" value="Adempiere.jar AdempiereSLib.jar"/>
-  	      </manifest>
-  	    </war>
-  	  </target>
+  <!--
+  ==============================================================================
+  Builds the Web Application Archive
+  ==============================================================================
+  -->
+  <target name="build"
+          depends="jar">
 
-  <!-- =========================================== -->
-  <!-- Creates the server binary                   -->
-  <!-- =========================================== -->
-  <target name="serverAppsDeployServer" depends="serverAppsWar">
-    <copy todir="../lib">
-      <fileset dir="${build.deploy.dir}" 
-      	includes="*.jar,*.war,*.ear"/>
-      <fileset dir="${build.jar.dir}" 
-      	includes="*.jar,*.war,*.ear"/>
-    </copy>
+    <war warfile="${war}"
+         compress="${compile.compress}"
+         webxml="${src.dir}/web/WEB-INF/web.xml">
+      <fileset dir="${src.dir}/web">
+        <exclude name="**/web.xml"/>
+        <exclude name="**/classes/**"/>
+      </fileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="serverApps"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="adempiereApps.war"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+      </manifest>
+    </war>
+
+    <copy file="${src.dir}/ear/application.xml" 
+          tofile="../lib/adempiereApps.xml"
+          verbose="true"/>
+
   </target>
 
 
-  <!-- =========================================== -->
-  <!-- Creates the binary structure                -->
-  <!-- =========================================== -->
-  <target name="main" depends="serverAppsDeployServer">
-  	<copy file="src/ear/application.xml" tofile="../lib/adempiereApps.xml" />
-  </target>
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script and creates them again
+  ==============================================================================
+  -->
+  <target name="rebuild"
+          depends="clean,
+                   build"/>
 
 
-  <!-- =========================================== -->
-  <!-- Cleans up the current build                 -->
-  <!-- =========================================== -->
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script.
+  ==============================================================================
+  -->
   <target name="clean">
+
     <delete dir="${build.dir}"/>
-    <delete file="../lib/adempiereApps.war" failonerror="false"/>
-    <delete file="../lib/adempiereApps.jar" failonerror="false"/>
-    <delete file="../lib/adempiereApps.xml" failonerror="false"/>
+    <delete file="${jar}"/>
+    <delete file="${war}"/>
+    <delete file="../lib/adempiereApps.xml"/>
+
   </target>
 
 </project>

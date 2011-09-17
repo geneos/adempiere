@@ -148,11 +148,10 @@
 			<zipfileset src="lib/patches.jar" >
 				<patternset refid="manifest.exclude"/>
 			</zipfileset>
-			<!-- posterita packages -->
-			<zipfileset src="lib/posterita.jar" >
+			<zipfileset src="lib/AdempiereOriginal.jar" >
 				<patternset refid="manifest.exclude"/>
 			</zipfileset>
-			<zipfileset src="lib/AdempiereOriginal.jar" >
+			<zipfileset src="lib/CompiereJasper.jar">
 				<patternset refid="manifest.exclude"/>
 			</zipfileset>
 			<indexjars>
@@ -254,7 +253,7 @@
 			<zipfileset src="lib/mysql-connector-java-5.1.13-bin.jar" >
 				<patternset refid="manifest.exclude"/>
 			</zipfileset>
-			
+
 			<manifest>
 				<attribute name="Specification-Title" value="Adempiere Client Library" />
 				<attribute name="Specification-Version" value="${ADEMPIERE_MAIN_VERSION}" />
@@ -414,7 +413,7 @@
 		<!-- bundle everything in one ear file for simpler deployment -->
 		<ear destfile="${basedir}/lib/adempiere.ear" appxml="${basedir}/lib/adempiereAll.xml" >
 			<fileset dir="${basedir}/lib"
-				includes="Adempiere.jar,AdempiereSLib.jar,adempiereRoot.jar,adempiereApps.jar,adempiereApps.war,adempiereRoot.war,adempiereWebStore.war,adempiereWebCM.war,posterita.war,posterita.jar,webui.war" />
+				includes="Adempiere.jar,AdempiereSLib.jar,adempiereRoot.jar,adempiereApps.jar,adempiereApps.war,adempiereRoot.war,adempiereWebStore.war,adempiereWebCM.war,posterita.war,webui.war" />
 		</ear>
 	</target>
 
@@ -429,7 +428,7 @@
 		<!-- bundle everything in one ear file for simpler deployment -->
 		<ear destfile="${basedir}/lib/adempiere.ear" appxml="${basedir}/lib/adempiereAll.xml" >
 			<fileset dir="${basedir}/lib"
-				includes="adempiereRoot.jar,adempiereApps.jar,adempiereApps.war,adempiereRoot.war,adempiereWebStore.war,adempiereWebCM.war,posterita.war,posterita.jar,webui.war" />
+				includes="adempiereRoot.jar,adempiereApps.jar,adempiereApps.war,adempiereRoot.war,adempiereWebStore.war,adempiereWebCM.war,posterita.war,webui.war" />
 			<metainf dir="${basedir}/glassfish" includes="sun-application.xml"/>
 		</ear>
 	</target>

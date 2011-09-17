@@ -18,7 +18,7 @@
 @"%JAVA_HOME%\bin\java" %ANT_OPTS% -classpath "%ANT_CLASSPATH%" -Dant.home="." org.apache.tools.ant.Main clean
 
 @echo Building ...
-@"%JAVA_HOME%\bin\java" %ANT_OPTS% -classpath "%ANT_CLASSPATH%" -Dant.home="." org.apache.tools.ant.Main -logger org.apache.tools.ant.listener.MailLogger war
+@"%JAVA_HOME%\bin\java" %ANT_OPTS% -classpath "%ANT_CLASSPATH%" -Dant.home="." org.apache.tools.ant.Main -logger org.apache.tools.ant.listener.MailLogger
 @IF ERRORLEVEL 1 goto ERROR
 
 @Echo Done ...

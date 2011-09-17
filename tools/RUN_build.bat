@@ -14,7 +14,7 @@
 @"%JAVA_HOME%\bin\java" %ANT_OPTS% -classpath %ANT_CLASSPATH% -Dant.home="." %ANT_PROPERTIES% org.apache.tools.ant.launch.Launcher clean
 
 @echo Building ...
-@"%JAVA_HOME%\bin\java" %ANT_OPTS% -classpath %ANT_CLASSPATH% -Dant.home="." %ANT_PROPERTIES% org.apache.tools.ant.launch.Launcher toolsDistribution
+@"%JAVA_HOME%\bin\java" %ANT_OPTS% -classpath %ANT_CLASSPATH% -Dant.home="." %ANT_PROPERTIES% org.apache.tools.ant.launch.Launcher
 
 @Echo Done ...
 @pause

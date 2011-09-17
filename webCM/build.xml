@@ -1,63 +1,80 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- ============================================= -->
-<!-- Adempiere CM Server                            -->
-<!-- ============================================= -->
-<!-- $Header$-->
+<?xml version="1.0" encoding="utf-8"?>
 
-<project name="webCM" default="main" basedir=".">
 
-  <!--<property environment="env"/>-->
+<!--
+==============================================================================
+Ant file to build the ADempiere "webCM" subproject
+==============================================================================
+-->
+<project name="webCM"
+         default="build"
+         basedir=".">
+
   <import file="../utils_dev/properties.xml"/>
 
-  <property name="src.dir" value="${basedir}/src"/>
-  <property name="src.main.dir" value="${src.dir}/main"/>
-  <property name="src.servlet.dir" value="${src.main.dir}/servlet"/>
-  <property name="src.web.dir" value="${src.dir}/web"/>
-  <property name="src.etc.dir" value="${src.dir}/etc"/>
+  <property name="src.dir"   value="src"/>
+  <property name="build.dir" value="build"/>
+  <property name="dist.dir"  value="../lib"/>
 
-  <property name="build.dir" value="${basedir}/build"/>
-  <property name="build.war.dir" value="${build.dir}/war"/>
-  <property name="deploy.dir" value="${basedir}/deploy"/>
+  <property name="war" value="${dist.dir}/adempiereWebCMbase.war"/>
 
-  <target name="webCMinit">
-    <echo message="=========== Build webCM"/>
+  <path id="project.classpath">
+    <pathelement location="../lib/Adempiere.jar"/>
+    <pathelement location="../tools/lib/javaee.jar"/>
+  </path>
+
+  <pathconvert refid="project.classpath"
+               property="jar.classpath"
+               pathsep=" ">
+    <flattenmapper/>
+  </pathconvert>
+
+
+  <!--
+  ==============================================================================
+  Sets the timestamp and checks if the files need to be compiled at all
+  ==============================================================================
+  -->
+  <target name="init">
+
+    <echo>======================================================================</echo>
+    <echo>Building ADempiere subproject "webCM"</echo>
+    <echo>======================================================================</echo>
+
     <tstamp/>
+
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+
+    <uptodate property="war.uptodate"
+              targetfile="${jar}">
+      <srcfiles dir="${src.dir}/main/servlet"
+                includes="**/*.java"/>
+    </uptodate>
+
   </target>
 
 
-  <path id="base.path">
-    <pathelement location="../lib/Adempiere.jar" />
-    <pathelement location="../lib/CSTools.jar" />
-    <pathelement location="../tools/lib/javaee.jar" />
+  <!--
+  ==============================================================================
+  Compiles the .java files into .class files
+  ==============================================================================
+  -->
+  <target name="compile"
+          depends="init">
 
-    <pathelement location="${build.classes.dir}" />
-  </path>
+    <javac srcdir="${src.dir}/main/servlet"
+           destdir="${build.dir}"
+           target="${compile.version}"
+           debug="${compile.debug}"
+           optimize="${compile.optimize}"
+           deprecation="${compile.deprecation}"
+           includeAntRuntime="false"
+           classpathref="project.classpath"/>
 
-
-  <!-- =========================================== -->
-  <!-- Compiles the source code                    -->
-  <!-- =========================================== -->
-  <target name="webCMcompile" depends="webCMinit">
-
-    <!--	Compile Web		-->
-    <mkdir dir="${build.dir}"/>
-    <mkdir dir="${build.war.dir}"/>
-    <path id="web.path">
-      <path refid="base.path"/>
-    </path>
-  	
-    <javac
-      target="1.5" 
-	  destdir="${build.war.dir}"
-	  debug="on"
-	  deprecation="off"
-	  optimize="on"
-	  classpathref="web.path">
-      <src path="${src.servlet.dir}"/>
-    </javac>
-  	
-    <copy todir="${build.war.dir}">
-      <fileset dir="${src.servlet.dir}">
+    <copy todir="${build.dir}"
+          verbose="true">
+      <fileset dir="${src.dir}/main/servlet">
         <include name="**/images/*"/>
         <include name="**/*.gif"/>
         <include name="**/*.jpg"/>
@@ -71,60 +88,64 @@
 
   </target>
 
-  <!-- =========================================== -->
-  <!-- Creates the war archives                    -->
-  <!-- =========================================== -->
-  <target name="webCMwar" depends="webCMcompile">
-    <mkdir dir="${deploy.dir}"/>
 
-    <!--	War Web Descriptor		-->
-    <war
-	  warfile="${deploy.dir}/adempiereWebCMbase.war"
-	  webxml="${src.web.dir}/WEB-INF/web.xml">
-      <fileset dir="${src.web.dir}" excludes="**/web.xml,**/lib/**,**/classes/**"/>
-      <!-- WEB-INF/classes			-->
-      <classes dir="${build.war.dir}"/>
+  <!--
+  ==============================================================================
+  Builds the Web Application Archive
+  ==============================================================================
+  -->
+  <target name="build"
+          depends="compile"
+          unless="war.uptodate">
+
+    <war destfile="${war}"
+         compress="${compile.compress}"
+         webxml="${src.dir}/web/WEB-INF/web.xml">
+      <fileset dir="${src.dir}/web">
+        <exclude name="**/web.xml"/>
+        <exclude name="**/lib/**"/>
+        <exclude name="**/classes/**"/>
+      </fileset>
+      <classes dir="${build.dir}"/>
       <manifest>
-		<attribute name="Specification-Title" value="AdempiereWebCM"/>
-		<attribute name="Specification-Version" value="${env.ADEMPIERE_VERSION}"/>
-		<attribute name="Specification-Vendor" value="Adempiere, Inc., (C) 2006 ComDivision GmbH"/>
-		<attribute name="Implementation-Title" value="AdempiereWebCMWar ${env.ADEMPIERE_VERSION}"/>
-		<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}"/>
-		<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}"/>
-		<attribute name="Implementation-URL" value="http://www.adempiere.com"/>
-		<attribute name="Class-Path" value="Adempiere.jar AdempiereSLib.jar"/>
+        <attribute name="Specification-Title"    value="webCM"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="adempiereWebCMbase.war"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+        <attribute name="Class-Path"             value="${jar.classpath}"/>
       </manifest>
     </war>
 
-  </target>
-
-  <!-- =========================================== -->
-  <!-- Creates the server binary                   -->
-  <!-- =========================================== -->
-  <target name="webCMdeployServer" depends="webCMwar">
-    <copy todir="../lib">
-      <fileset dir="${deploy.dir}" 
-      	includes="*.jar,*.war,*.ear"/>
-    </copy>
+    <copy file="${src.dir}/ear/application.xml" 
+          tofile="../lib/adempiereWebCM.xml"
+          verbose="true"/>
   </target>
 
 
-  <!-- =========================================== -->
-  <!-- Creates the binary structure                -->
-  <!-- =========================================== -->
-  <target name="main" depends="webCMdeployServer">
-  	<copy file="src/ear/application.xml" tofile="../lib/adempiereWebCM.xml" />
-  </target>
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script and creates them again
+  ==============================================================================
+  -->
+  <target name="rebuild"
+          depends="clean,
+                   build"/>
 
 
-  <!-- =========================================== -->
-  <!-- Cleans up the current build                 -->
-  <!-- =========================================== -->
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script.
+  ==============================================================================
+  -->
   <target name="clean">
+
     <delete dir="${build.dir}"/>
-    <delete dir="${deploy.dir}"/>
-    <delete file="../lib/adempiereWebCMbase.war" failonerror="false"/>
-    <delete file="../lib/adempiereWebCM.xml" failonerror="false"/>
+    <delete file="${war}"/>
+    <delete file="../lib/adempiereWebCM.xml"/>
+
   </target>
 
 </project>

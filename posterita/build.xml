@@ -3,24 +3,31 @@
 
 <!--
 ==============================================================================
-Ant file to build the ADempiere "client" subproject
+Ant file to build the ADempiere "posterita" subproject
 ==============================================================================
 -->
-<project name="client"
+<project name="posterita"
          default="build"
          basedir=".">
 
   <import file="../utils_dev/properties.xml"/>
 
-  <property name="src.dir"   value="src"/>
+  <property name="src.dir"   value="posterita/src"/>
+  <property name="web.dir"   value="posterita/web"/>
   <property name="build.dir" value="build"/>
   <property name="dist.dir"  value="../lib"/>
 
-  <property name="jar" value="${dist.dir}/Adempiere.jar"/>
+  <property name="war" value="${dist.dir}/posterita.war"/>
 
   <path id="project.classpath">
-    <pathelement path="../lib/CCTools.jar"/>
-    <pathelement path="../lib/Base.jar"/>
+    <pathelement path="${web.dir}/WEB-INF/lib/barcode4j.jar"/>
+    <pathelement path="${web.dir}/WEB-INF/lib/displaytag-1.1.1.jar"/>
+    <pathelement path="${web.dir}/WEB-INF/lib/struts.jar"/>
+    <pathelement path="../tools/lib/javaee.jar"/>
+    <pathelement path="../lib/adempiereApps.jar"/>
+    <pathelement path="../lib/CSTools.jar"/>
+    <pathelement path="../lib/CompiereJasper.jar"/>
+    <pathelement path="../lib/CompiereJasperReqs.jar"/>
   </path>
 
   <pathconvert refid="project.classpath"
@@ -28,14 +35,6 @@ Ant file to build the ADempiere "client" subproject
                pathsep=" ">
     <flattenmapper/>
   </pathconvert>
-
-  <patternset id="manifest.exclude">
-    <exclude name="META-INF/*.DSA"/>
-    <exclude name="META-INF/*.RSA"/>
-    <exclude name="META-INF/*.SF"/>
-    <exclude name="META-INF/MANIFEST.MF"/>
-    <exclude name="META-INF/INDEX.LIST"/>
-  </patternset>
 
 
   <!--
@@ -46,7 +45,7 @@ Ant file to build the ADempiere "client" subproject
   <target name="init">
 
     <echo>======================================================================</echo>
-    <echo>Building ADempiere subproject "client"</echo>
+    <echo>Building ADempiere subproject "posterita"</echo>
     <echo>======================================================================</echo>
 
     <tstamp/>
@@ -54,9 +53,9 @@ Ant file to build the ADempiere "client" subproject
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${dist.dir}"/>
 
-    <uptodate property="jar.uptodate"
-              targetfile="${jar}">
-      <srcfiles dir="${src.dir}"
+    <uptodate property="war.uptodate"
+              targetfile="${war}">
+      <srcfiles dir="${src.dir}/main"
                 includes="**/*.java"/>
     </uptodate>
 
@@ -71,7 +70,7 @@ Ant file to build the ADempiere "client" subproject
   <target name="compile"
           depends="init">
 
-    <javac srcdir="${src.dir}"
+    <javac srcdir="${src.dir}/main"
            destdir="${build.dir}"
            target="${compile.version}"
            debug="${compile.debug}"
@@ -80,16 +79,17 @@ Ant file to build the ADempiere "client" subproject
            includeAntRuntime="false"
            classpathref="project.classpath"/>
 
-    <copy todir="${build.dir}"
+    <copy todir="${web.dir}/WEB-INF/classes"
           verbose="true">
-      <fileset dir="${src.dir}">
+      <fileset dir="${src.dir}/main">
+        <include name="MessageResources.properties"/>
         <include name="**/images/*"/>
         <include name="**/*.gif"/>
         <include name="**/*.jpg"/>
+        <include name="**/*.png"/>
         <include name="**/*.wav"/>
         <include name="**/*.htm"/>
         <include name="**/*.html"/>
-        <include name="**/*.properties"/>
         <exclude name="**/package.html"/>
       </fileset>
     </copy>
@@ -99,35 +99,37 @@ Ant file to build the ADempiere "client" subproject
 
   <!--
   ==============================================================================
-  Builds the Java Archive containing the compiled classes
+  Builds the Web Application Archive
   ==============================================================================
   -->
   <target name="build"
           depends="compile"
-          unless="jar.uptodate">
+          unless="war.uptodate">
 
-    <jar destfile="${jar}"
+    <war warfile="${war}"
          compress="${compile.compress}"
-         basedir="${build.dir}"
-         duplicate="preserve">
-      <zipfileset src="../lib/Base.jar">
-        <patternset refid="manifest.exclude"/>
+         webxml="${web.dir}/WEB-INF/web.xml">
+      <zipfileset dir="${build.dir}" prefix="WEB-INF/classes">
+        <include name="**/*.class"/>
       </zipfileset>
-      <zipfileset src="../lib/Extend.jar">
-        <patternset refid="manifest.exclude"/>
-      </zipfileset>
+      <fileset dir="${web.dir}">
+        <include name="**/*"/>
+      </fileset>
       <manifest>
-        <attribute name="Specification-Title"    value="client"/>
+        <attribute name="Specification-Title"    value="posterita"/>
         <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
         <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
-        <attribute name="Implementation-Title"   value="Adempiere.jar"/>
+        <attribute name="Implementation-Title"   value="posterita.war"/>
         <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
         <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
         <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
-        <attribute name="Main-Class"             value="org.compiere.Adempiere"/>
         <attribute name="Class-Path"             value="${jar.classpath}"/>
-      </manifest> 
-    </jar>
+      </manifest>
+    </war>
+
+    <copy file="${war}"
+          todir="../lib"
+          verbose="true"/>
   </target>
 
 
@@ -149,7 +151,8 @@ Ant file to build the ADempiere "client" subproject
   <target name="clean">
 
     <delete dir="${build.dir}"/>
-    <delete file="${jar}"/>
+    <delete dir="${web.dir}/WEB-INF/classes"/>
+    <delete file="${war}"/>
 
   </target>
 

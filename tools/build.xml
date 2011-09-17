@@ -1,512 +1,520 @@
-<!-- ============================================= -->
-<!-- Tools                                         -->
-<!-- ============================================= -->
-<!-- $Header: /cvs/adempiere/tools/build.xml,v 1.4 2006/07/03 23:23:31 jjanke Exp $ -->
-
-<project name="tools" default="toolsDistribution" basedir=".">
-
-	<description>
-	The resulting CCTools.jar and CSTools.jar
-	repackage all third party libraries
-	in a single jar for simplified start and version control.
-	The resuling Server CSTools.jar is added to EARs
-  </description>
-
-	<!-- set global properties for this build -->
-	<property name="src" value="src" />
-	<property name="build.dir" value="build" />
-	<property name="jboss.dir" value="../jboss" />
-	<property name="glassfish.dir" value="../glassfishfacet" />
-	<property name="dist.dir" value="../lib" />
-	<!--<property environment="env"/>-->
-	<import file="../utils_dev/properties.xml" />
-
-	<!-- set path to include the necessary jar files for javac -->
-	<path id="project.class.path">
-		<pathelement path="${classpath}" />
-		<pathelement path="lib/jstl.jar" />
-		<pathelement path="lib/jsp-api.jar" />
-		<pathelement path="lib/servlet-api.jar" />
-		<pathelement path="lib/standard.jar" />
-	</path>
-
-	<patternset id="manifest.exclude">
-		<exclude name="META-INF/*.DSA" />
-		<exclude name="META-INF/*.RSA" />
-		<exclude name="META-INF/*.SF" />
-		<exclude name="META-INF/MANIFEST.MF" />
-		<exclude name="META-INF/INDEX.LIST" />
-	</patternset>
-
-	<taskdef resource="net/sf/antcontrib/antlib.xml">
-		<classpath>
-			<fileset file="lib/ant-contrib-1.0b1.jar"></fileset>
-		</classpath>
-	</taskdef>
-
-	<!-- ============================================= -->
-	<!-- Init                                          -->
-	<!-- ============================================= -->
-	<target name="toolsInit" description="initialization target">
-		<echo message="=========== Build Tools  ${env.ADEMPIERE_VERSION}" />
-		<!-- create the time stamp -->
-		<tstamp />
-		<!-- create the build directory structure used by compile -->
-		<mkdir dir="${build.dir}" />
-		<!-- check for the distribution directory -->
-		<mkdir dir="${dist.dir}" />
-
-		<uptodate property="jars.uptodate" targetfile="${dist.dir}/CCTools.jar">
-			<srcfiles dir="${src}" includes="**/*.java" />
-		</uptodate>
-	</target>
+<?xml version="1.0" encoding="utf-8"?>
 
 
-	<!-- ============================================= -->
-	<!-- Compile ECS                                   -->
-	<!-- ============================================= -->
-	<target name="toolsCompile" depends="toolsInit" unless="jars.uptodate">
-		<!-- compile the java code from ${src} into ${build.dir}S -->
-		<javac target="1.6" srcdir="${src}" destdir="${build.dir}" deprecation="on" debug="on">
-			<classpath refid="project.class.path" />
-		</javac>
-		<!-- copy all image & sound files from src to the build directory -->
-		<copy todir="${build.dir}">
-			<fileset dir="${src}">
-				<include name="**/images/*" />
-				<include name="**/*.gif" />
-				<include name="**/*.jpg" />
-				<include name="**/*.wav" />
-				<include name="**/*.htm" />
-				<include name="**/*.html" />
-				<include name="**/*.properties" />
-				<exclude name="**/package.html" />
-			</fileset>
-		</copy>
-	</target>
+<!--
+==============================================================================
+Ant file to build the ADempiere "tools" subproject
+==============================================================================
+-->
+<project name="tools"
+         default="build"
+         basedir=".">
+
+  <import file="../utils_dev/properties.xml"/>
+
+  <property name="src.dir"       value="src"/>
+  <property name="build.dir"     value="build"/>
+  <property name="dist.dir"      value="../lib"/>
+
+  <property name="jboss.dir"     value="../jboss"/>
+  <property name="glassfish.dir" value="../glassfishfacet"/>
+
+  <patternset id="manifest.exclude">
+    <exclude name="META-INF/*.DSA"/>
+    <exclude name="META-INF/*.RSA"/>
+    <exclude name="META-INF/*.SF"/>
+    <exclude name="META-INF/MANIFEST.MF"/>
+    <exclude name="META-INF/INDEX.LIST"/>
+  </patternset>
 
 
-	<!-- ============================================= -->
-	<!-- Buld Apps Server Client Jars                  -->
-	<!-- ============================================= -->
-	<target name="toolsAppsServer" depends="toolsCompile" unless="jars.uptodate" description="Create JBoss Client jar">
-		<!-- Create jboss.jar file 	-->
-		<jar jarfile="${dist.dir}/jboss.jar" duplicate="preserve">
-			<zipfileset src="${jboss.dir}/client/jboss-ejb3x.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="${jboss.dir}/client/jboss-ejb3-client.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="${jboss.dir}/client/jbossall-client.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<manifest>
-				<attribute name="Specification-Title" value="Adempiere JBoss Client" />
-				<attribute name="Specification-Version" value="${env.ADEMPIERE_VERSION}" />
-				<attribute name="Specification-Vendor" value="Adempiere, Inc." />
-				<attribute name="Implementation-Title" value="jboss ${env.ADEMPIERE_VERSION}" />
-				<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}" />
-				<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}" />
-				<attribute name="Implementation-URL" value="http://www.adempiere.com" />
-			</manifest>
-		</jar>
+  <!--
+  ==============================================================================
+  Sets the timestamp and checks if the files need to be compiled at all
+  ==============================================================================
+  -->
+  <target name="init">
 
-		<jar jarfile="${dist.dir}/glassfish.jar" duplicate="preserve">
-			<zipgroupfileset dir="${glassfish.dir}/lib" includes="*.jar">
-				<patternset refid="manifest.exclude" />
-			</zipgroupfileset>
-			<zipfileset src="lib/javaee.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<manifest>
-				<attribute name="Specification-Title" value="Adempiere GlassFish Client" />
-				<attribute name="Specification-Version" value="${env.ADEMPIERE_VERSION}" />
-				<attribute name="Specification-Vendor" value="Adempiere, Inc." />
-				<attribute name="Implementation-Title" value="GlassFish ${env.ADEMPIERE_VERSION}" />
-				<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}" />
-				<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}" />
-				<attribute name="Implementation-URL" value="http://www.adempiere.com" />
-			</manifest>
-		</jar>
-	</target>
+    <echo>======================================================================</echo>
+    <echo>Building ADempiere subproject "tools"</echo>
+    <echo>======================================================================</echo>
 
-	<!-- ============================================= -->
-	<!-- Buld Database Jars                            -->
-	<!-- ============================================= -->
-	<target name="toolsDatabase" depends="toolsCompile" unless="jars.uptodate" description="Create db jars">
+    <tstamp/>
 
-		<!-- Create oracle.jar file 	-->
-		<jar jarfile="${dist.dir}/oracle.jar" duplicate="preserve">
-			<zipfileset src="lib/ojdbc6.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
 
-			<manifest>
-				<attribute name="Specification-Title" value="Oracle JDBC" />
-				<attribute name="Specification-Version" value="11g" />
-				<attribute name="Specification-Vendor" value="Oracle" />
-				<attribute name="Implementation-Title" value="oracle ${env.ADEMPIERE_VERSION}" />
-				<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}" />
-				<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}" />
-				<attribute name="Implementation-URL" value="http://www.adempiere.org" />
-			</manifest>
-		</jar>
+    <uptodate property="CCTools.uptodate"
+              targetfile="${dist.dir}/CCTools.jar">
+      <srcfiles dir="${src.dir}"
+                includes="**/*.java"/>
+    </uptodate>
 
-		<!-- Create postgresql.jar file 	-->
-		<jar jarfile="${dist.dir}/postgresql.jar">
-			<zipfileset src="lib/postgresql.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
+    <uptodate property="CSTools.uptodate"
+              targetfile="${dist.dir}/CSTools.jar">
+      <srcfiles dir="${src.dir}"
+                includes="**/*.java"/>
+    </uptodate>
 
-			<manifest>
-				<attribute name="Specification-Title" value="PostgreSQL JDBC" />
-				<attribute name="Specification-Version" value="postgresql" />
-				<attribute name="Specification-Vendor" value="postgresql" />
-				<attribute name="Implementation-Title" value="postgresql ${env.ADEMPIERE_VERSION}" />
-				<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}" />
-				<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}" />
-				<attribute name="Implementation-URL" value="http://www.adempiere.org" />
-			</manifest>
-		</jar>
-
-		<!-- @Trifon - CREATE MYSQL JAR FILE --> 
-		<jar jarfile="${dist.dir}/mysql-connector-java-5.1.13-bin.jar">
-			<zipfileset src="lib/mysql-connector-java-5.1.13-bin.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-
-			<manifest>
-				<attribute name="Specification-Title" value="MySQL JDBC" />
-				<attribute name="Specification-Version" value="MYSQL" />
-				<attribute name="Specification-Vendor" value="MYSQL" />
-				<attribute name="Implementation-Title" value="MYSQL ${env.ADEMPIERE_VERSION}" />
-				<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}" />
-				<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}" />
-				<attribute name="Implementation-URL" value="http://www.adempiere.org" />
-			</manifest>
-		</jar>
-        <!-- -->
-
-	</target>
+  </target>
 
 
-	<!-- ============================================= -->
-	<!-- Buld Server Jar                               -->
-	<!-- ============================================= -->
-	<target name="toolsServer" depends="toolsCompile" unless="jars.uptodate" description="Create CSTools.jar">
+  <!--
+  ==============================================================================
+  Compiles the .java files of the subproject into .class files
+  ==============================================================================
+  -->
+  <target name="compile"
+          depends="init">
 
-		<!-- Create CSTools jar		-->
-		<jar jarfile="${dist.dir}/CSTools.jar" duplicate="preserve">
+    <javac srcdir="${src.dir}"
+           destdir="${build.dir}"
+           target="${compile.version}"
+           debug="${compile.debug}"
+           optimize="${compile.optimize}"
+           deprecation="${compile.deprecation}"
+           includeAntRuntime="false"/>
 
-			<!-- services entries -->
-			<fileset dir=".">
-				<include name="META-INF/services/**" />
-			</fileset>
+    <copy todir="${build.dir}"
+          verbose="true">
+      <fileset dir="${src.dir}">
+        <include name="**/images/*"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.wav"/>
+        <include name="**/*.htm"/>
+        <include name="**/*.html"/>
+        <include name="**/*.properties"/>
+        <exclude name="**/package.html"/>
+      </fileset>
+    </copy>
 
-			<!-- JSTL				-->
-			<zipfileset src="lib/jstl.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/standard.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- ECS -->
-			<fileset dir="${build.dir}">
-				<include name="**/apache/ecs/**" />
-			</fileset>
-			<!-- Installing Script Based in JSR 223 Scripting APIs -->
-			<zipfileset src="lib/script-api.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- BeanShell -->
-			<zipfileset src="lib/bsh-2.0b5.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/bsh-engine.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Groovy -->
-			<zipfileset src="lib/groovy-all-1.5.1.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/groovy-engine.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Groovy -->
-			<zipfileset src="lib/jython.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/jython-engine.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Payment Processors		-->
-			<zipfileset src="lib/Verisign.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/payflow.jar">
-							<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/miglayout-3.7.1-swing.jar">
-					<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/jpayment.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Log4J, jnlp			-->
-			<zipfileset src="lib/commons-logging.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/log4j.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/jnlp.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Barcode, ftp			-->
-			<zipfileset src="lib/barbecue-1.5-beta1.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/commons-net-1.4.0.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Adempiere look and feel -->
-			<zipfileset src="lib/looks-2.0.4.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- PDF -->
-			<zipfileset src="lib/jpedal.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/iText-2.1.7.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- JFreeChart			-->
-			<zipfileset src="lib/jfreechart-1.0.13.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/jcommon-1.0.16.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- JMS -->
-			<zipfileset src="lib/activemq-core-5.0.0.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- C3P0 connection pool -->
-			<zipfileset src="lib/c3p0-0.9.1.2.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/c3p0-oracle-thin-extras-0.9.1.2.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- POI -->
-			<zipfileset src="lib/poi-3.5-FINAL-20090928.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- CGLib -->
-			<zipfileset src="lib/cglib.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<manifest>
-				<attribute name="Specification-Title" value="Adempiere Server Tools" />
-				<attribute name="Specification-Version" value="${env.ADEMPIERE_VERSION}" />
-				<attribute name="Specification-Vendor" value="Adempiere, Inc." />
-				<attribute name="Implementation-Title" value="CSTools ${env.ADEMPIERE_VERSION}" />
-				<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}" />
-				<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}" />
-				<attribute name="Implementation-URL" value="http://www.adempiere.org" />
-			</manifest>
-			<!-- Commons -->
-			<zipfileset src="lib/commons-collections-3.1.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/commons-codec.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- jars for 2pack                         -->
-			<zipfileset src="lib/ant.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/xercesImpl.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- cron job -->
-			<zipfileset src="lib/cron4j-2.2.1.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>			
-		</jar>
-
-	</target>
-
-	<!-- ============================================= -->
-	<!-- Buld Client Jar                               -->
-	<!-- ============================================= -->
-	<target name="toolsClient" depends="toolsCompile" unless="jars.uptodate" description="Create CCTools.jar">
-
-		<!-- Create CCTools.jar file 	-->
-		<jar jarfile="${dist.dir}/CCTools.jar" duplicate="preserve">
-
-			<!-- services entries -->
-			<fileset dir=".">
-				<include name="META-INF/services/**" />
-			</fileset>
-
-			<!-- ECS -->
-			<fileset dir="${build.dir}">
-				<include name="**/apache/ecs/**" />
-			</fileset>
-			<!-- Tree CellEditor -->
-			<fileset dir="${build.dir}">
-				<include name="it/**" />
-			</fileset>
-			<!-- Mail				-->
-			<zipfileset src="lib/mail.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Installing Script Based in JSR 223 Scripting APIs -->
-			<zipfileset src="lib/script-api.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- BeanShell -->
-			<zipfileset src="lib/bsh-2.0b5.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/bsh-engine.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Groovy -->
-			<zipfileset src="lib/groovy-all-1.5.1.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/groovy-engine.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Groovy -->
-			<zipfileset src="lib/jython.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/jython-engine.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-
-			<!-- Payment Processors		-->
-			<zipfileset src="lib/Verisign.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/payflow.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/miglayout-3.7.1-swing.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/jpayment.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Log4J, jnlp			-->
-			<zipfileset src="lib/commons-logging.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/log4j.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/jnlp.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Barcode, ftp			-->
-			<zipfileset src="lib/barbecue-1.5-beta1.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/commons-net-1.4.0.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- JFreeChart			-->
-			<zipfileset src="lib/jfreechart-1.0.13.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/jcommon-1.0.16.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Graph				-->
-			<zipfileset src="lib/jgraph.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- Adempeire Look and Feal				-->
-			<zipfileset src="lib/looks-2.0.4.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- jars for 2pack                         -->
-			<zipfileset src="lib/ant.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/xercesImpl.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- PDF -->
-			<zipfileset src="lib/jpedal.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/iText-2.1.7.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/swingx-1.6.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- JMS -->
-			<zipfileset src="lib/activemq-core-5.0.0.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- C3P0 connection pool -->
-			<zipfileset src="lib/c3p0-0.9.1.2.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/c3p0-oracle-thin-extras-0.9.1.2.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<!-- POI -->
-			<zipfileset src="lib/poi-3.5-FINAL-20090928.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<manifest>
-				<attribute name="Specification-Title" value="Adempiere Client Tools" />
-				<attribute name="Specification-Version" value="${env.ADEMPIERE_VERSION}" />
-				<attribute name="Specification-Vendor" value="Adempiere, Inc." />
-				<attribute name="Implementation-Title" value="CCTools ${env.ADEMPIERE_VERSION}" />
-				<attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION} ${DSTAMP}-${TSTAMP}" />
-				<attribute name="Implementation-Vendor" value="${env.ADEMPIERE_VENDOR}" />
-				<attribute name="Implementation-URL" value="http://www.adempiere.org" />
-			</manifest>
-			<!-- Commons -->
-			<zipfileset src="lib/commons-collections-3.1.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-			<zipfileset src="lib/commons-codec.jar">
-				<patternset refid="manifest.exclude" />
-			</zipfileset>
-		</jar>
-
-	</target>
+  </target>
 
 
-	<!-- ============================================= -->
-	<!-- Buld Jars                                     -->
-	<!-- ============================================= -->
-	<target name="toolsDistribution" depends="toolsServer, toolsClient, toolsAppsServer, toolsDatabase" unless="jars.uptodate" description="Create jars">
+  <!--
+  ==============================================================================
+  Builds the CSTools.jar file
+  ==============================================================================
+  -->
+  <target name="jar-server-tools"
+          depends="compile"
+          unless="CSTools.uptodate" >
 
-	</target>
+    <jar destfile="${dist.dir}/CSTools.jar"
+         compress="${compile.compress}"
+         duplicate="preserve">
+      <fileset dir=".">
+        <include name="META-INF/services/**"/>
+      </fileset>
+      <zipfileset src="lib/jstl.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/standard.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <fileset dir="${build.dir}">
+        <include name="**/apache/ecs/**"/>
+      </fileset>
+      <zipfileset src="lib/script-api.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/bsh-2.0b5.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/bsh-engine.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/groovy-all-1.5.1.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/groovy-engine.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jython.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jython-engine.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/Verisign.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/payflow.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/miglayout-3.7.1-swing.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jpayment.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/commons-logging.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/log4j.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jnlp.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/barbecue-1.5-beta1.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/commons-net-1.4.0.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/looks-2.0.4.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jpedal.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/iText-2.1.7.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jfreechart-1.0.13.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jcommon-1.0.16.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/activemq-core-5.0.0.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/c3p0-0.9.1.2.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/c3p0-oracle-thin-extras-0.9.1.2.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/poi-3.5-FINAL-20090928.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/cglib.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/commons-collections-3.1.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/commons-codec.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/ant.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/xercesImpl.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/cron4j-2.2.1.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="tools"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="CSTools.jar"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+      </manifest>
+    </jar>
+
+  </target>
 
 
-	<!-- ============================================= -->
-	<!-- Clean up                                      -->
-	<!-- ============================================= -->
-	<target name="clean">
-		<!-- Delete the ${build.dir} directory trees -->
-		<delete dir="${build.dir}" />
-		<delete file="${dist.dir}/CCTools.jar" failonerror="false" />
-		<delete file="${dist.dir}/CSTools.jar" failonerror="false" />
-		<delete file="${dist.dir}/jboss.jar" failonerror="false" />
-		<delete file="${dist.dir}/glassfish.jar" failonerror="false" />
-		<delete file="${dist.dir}/oracle.jar" failonerror="false" />
-		<delete file="${dist.dir}/postgresql.jar" failonerror="false" />
-	</target>
+  <!--
+  ==============================================================================
+  Builds the CCTools.jar file
+  ==============================================================================
+  -->
+  <target name="jar-client-tools"
+          depends="compile"
+          unless="CCTools.uptodate">
+
+    <jar destfile="${dist.dir}/CCTools.jar"
+         compress="${compile.compress}"
+         duplicate="preserve">
+      <fileset dir=".">
+        <include name="META-INF/services/**"/>
+      </fileset>
+      <fileset dir="${build.dir}">
+        <include name="**/apache/ecs/**"/>
+      </fileset>
+      <fileset dir="${build.dir}">
+        <include name="it/**"/>
+      </fileset>
+      <zipfileset src="lib/mail.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/script-api.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/bsh-2.0b5.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/bsh-engine.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/groovy-all-1.5.1.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/groovy-engine.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jython.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jython-engine.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/Verisign.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/payflow.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/miglayout-3.7.1-swing.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jpayment.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/commons-logging.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/log4j.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jnlp.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/barbecue-1.5-beta1.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/commons-net-1.4.0.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jfreechart-1.0.13.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jcommon-1.0.16.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jgraph.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/looks-2.0.4.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/ant.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/xercesImpl.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/jpedal.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/iText-2.1.7.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/swingx-1.6.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/activemq-core-5.0.0.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/c3p0-0.9.1.2.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/c3p0-oracle-thin-extras-0.9.1.2.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/poi-3.5-FINAL-20090928.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/commons-collections-3.1.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/commons-codec.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="tools"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="CCTools.jar"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+      </manifest>
+    </jar>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Builds the jboss.jar and glassfish.jar files
+  ==============================================================================
+  -->
+  <target name="jar-application-servers"
+          depends="init">
+
+    <jar destfile="${dist.dir}/jboss.jar"
+         compress="${compile.compress}"
+         duplicate="preserve">
+      <zipfileset src="${jboss.dir}/client/jboss-ejb3x.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="${jboss.dir}/client/jboss-ejb3-client.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="${jboss.dir}/client/jbossall-client.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="tools"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="jboss.jar"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="${dist.dir}/glassfish.jar"
+         compress="${compile.compress}"
+         duplicate="preserve">
+      <zipfileset src="${glassfish.dir}/lib/appserv-admin.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="${glassfish.dir}/lib/appserv-deployment-client.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="${glassfish.dir}/lib/appserv-ext.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="${glassfish.dir}/lib/appserv-rt.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <zipfileset src="lib/javaee.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="tools"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="glassfish.jar"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+      </manifest>
+    </jar>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Builds the oracle.jar, postgresql.jar and mysql-connector-java-5.1.13-bin.jar files
+  ==============================================================================
+  -->
+  <target name="jar-database"
+          depends="init">
+
+    <jar destfile="${dist.dir}/oracle.jar"
+         compress="${compile.compress}"
+         duplicate="preserve">
+      <zipfileset src="lib/ojdbc6.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="tools"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="oracle.jar"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="${dist.dir}/postgresql.jar"
+         compress="${compile.compress}"
+         duplicate="preserve">
+      <zipfileset src="lib/postgresql.jar">
+        <patternset refid="manifest.exclude"/>
+      </zipfileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="tools"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="postgresql.jar"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+      </manifest>
+    </jar>
+
+    <jar jarfile="${dist.dir}/mysql-connector-java-5.1.13-bin.jar">
+      <zipfileset src="lib/mysql-connector-java-5.1.13-bin.jar">
+        <patternset refid="manifest.exclude" />
+      </zipfileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="tools"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="mysql-connector-java-5.1.13-bin.jar"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+      </manifest>
+    </jar>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Default target - invokes all targets required to build the subproject
+  ==============================================================================
+  -->
+  <target name="build"
+          depends="jar-server-tools,
+                   jar-client-tools,
+                   jar-application-servers,
+                   jar-database"/>
+
+
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script and creates them again
+  ==============================================================================
+  -->
+  <target name="rebuild"
+          depends="clean,
+                   build"/>
+
+
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script
+  ==============================================================================
+  -->
+  <target name="clean">
+
+    <delete dir="${build.dir}"/>
+    <delete file="${dist.dir}/CCTools.jar"/>
+    <delete file="${dist.dir}/CSTools.jar"/>
+    <delete file="${dist.dir}/jboss.jar"/>
+    <delete file="${dist.dir}/glassfish.jar"/>
+    <delete file="${dist.dir}/oracle.jar"/>
+    <delete file="${dist.dir}/postgresql.jar"/>
+    <delete file="${dist.dir}/mysql-connector-java-5.1.13-bin.jar"/>
+
+  </target>
 
 </project>

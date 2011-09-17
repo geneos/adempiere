@@ -1,90 +1,157 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- ======================================================== -->
-<!-- Zk Ajax UI (Web UI)                               -->
-<!-- ======================================================== -->
+<?xml version="1.0" encoding="utf-8"?>
 
-<project name="ZkWebUI" default="war" basedir=".">
-	<description>
-	    This buildfile is used to build the Zk WebUI client.
-  	</description>
-	<!-- set global properties for this build -->
-	<!--<property environment="env"/>-->
-	<property name="src.dir" value="${basedir}/WEB-INF/src"/>
-	<property name="classes.dir" value="${basedir}/WEB-INF/classes"/>
-	<property name="dist.dir" value="${basedir}/dist"/>
-	<property name="WEBINF.dir" value="${basedir}/WEB-INF"/>
-	<property name="Adempiere.dir" value="${basedir}/../lib"></property>
 
-	<property name="war.name"	value="webui"/>
-	<property name="compile.debug"       value="true"/>
-	<property name="compile.deprecation" value="false"/>
-	<property name="compile.optimize"    value="true"/>
+<!--
+==============================================================================
+Ant file to build the ADempiere "zkwebui" subproject
+==============================================================================
+-->
+<project name="zkwebui"
+         default="build"
+         basedir=".">
 
-	<path id="compile.classpath">
-		<pathelement location="${basedir}"/>
-	  	<pathelement location="${basedir}/WEB-INF/classes"/>
-	  	<pathelement location="${basedir}/WEB-INF/src"/>
+  <import file="../utils_dev/properties.xml"/>
 
-		<pathelement location="${Adempiere.dir}/../base/build"/>
-		<pathelement location="${Adempiere.dir}/../client/build"/>
-		<pathelement location="${Adempiere.dir}/../JasperReports/build"/>
-	    <fileset dir="${Adempiere.dir}">
-	    	<include name="*.jar"/>
-	    </fileset>
+  <property name="src.dir"   value="WEB-INF/src"/>
+  <property name="build.dir" value="WEB-INF/classes"/>
+  <property name="dist.dir"  value="../lib"/>
 
-	    <pathelement location="${Adempiere.dir}/../tools/lib/servlet-api.jar"/>
-	    <fileset dir="${basedir}/WEB-INF/lib">
-	    	<include name="*.jar"/>
-	    </fileset>
-	</path>
+  <property name="war" value="${dist.dir}/webui.war"/>
 
-	<target name="clean" description="delete class directory">
-	   <delete dir="${classes.dir}/org" />
-	   <delete dir="${dist.dir}" />
-	</target>
+  <path id="project.classpath">
+    <pathelement path="../lib/Adempiere.jar"/>
+    <pathelement path="../lib/CCTools.jar"/>
+    <pathelement path="../lib/CompiereJasper.jar"/>
+    <pathelement path="../lib/CompiereJasperReqs.jar"/>
+    <pathelement path="../tools/lib/servlet-api.jar"/>
+    <fileset dir="WEB-INF/lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
 
-	<target name="compile" depends="clean" description="Compile Java sources">
-	    <mkdir dir="${classes.dir}"/>
-	    <javac target="1.6" 
-	    	   srcdir="WEB-INF/src"
-	           destdir="${classes.dir}"
-	           debug="${compile.debug}"
-	     	   deprecation="${compile.deprecation}"
-	           optimize="${compile.optimize}">
-	        <classpath refid="compile.classpath"/>
-	    </javac>
-		<copy  todir="${classes.dir}" overwrite="true">
-			<fileset dir="WEB-INF/src">
-				<include name="**/*.xml" />
-			</fileset>
-		</copy>
-	</target>
+  <pathconvert refid="project.classpath"
+               property="jar.classpath"
+               pathsep=" ">
+    <flattenmapper/>
+  </pathconvert>
 
-	<target name="war" depends="compile">
-		<echo message="=========== Build Zk Ajax UI ==========="/>
-		<delete dir="${dist.dir}" />
 
-		<mkdir dir="${dist.dir}"/>
+  <!--
+  ==============================================================================
+  Sets the timestamp and checks if the files need to be compiled at all
+  ==============================================================================
+  -->
+  <target name="init">
 
-		<war
-			  warfile="${dist.dir}/${war.name}.war"
-			  webxml="${WEBINF.dir}/web.xml">
-		      <fileset dir="${basedir}" excludes="
-		      	                                    .settings/**,
-											      	bin/**,
-											      	dist/**,
-											      	.*,
-											      	work/**,
-											      	WEB-INF/src/**,
-		      										**/web.xml,
-		      										**/test/**,
-		      										WEB-INF/lib/*-sources.jar,
-		      										**/test.zul"
-		      									>
+    <echo>======================================================================</echo>
+    <echo>Building ADempiere subproject "zkwebui"</echo>
+    <echo>======================================================================</echo>
 
-		      </fileset>
-		</war>
+    <tstamp/>
 
-		<copy file="${dist.dir}/${war.name}.war" tofile="../lib/${war.name}.war"/>
-	</target>
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+
+    <uptodate property="war.uptodate"
+              targetfile="${war}">
+      <srcfiles dir="${src.dir}"
+                includes="**/*.java"/>
+    </uptodate>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Compiles the .java files into .class files
+  ==============================================================================
+  -->
+  <target name="compile"
+          depends="init"
+          unless="war.uptodate">
+
+    <javac srcdir="${src.dir}"
+           destdir="${build.dir}"
+           target="${compile.version}"
+           debug="${compile.debug}"
+           optimize="${compile.optimize}"
+           deprecation="${compile.deprecation}"
+           includeAntRuntime="false"
+           classpathref="project.classpath"/>
+
+    <copy todir="${build.dir}"
+          verbose="true">
+      <fileset dir="${src.dir}">
+        <include name="**/*.xml"/>
+      </fileset>
+    </copy>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Builds the Web Application Archive
+  ==============================================================================
+  -->
+  <target name="build"
+          depends="compile"
+          unless="war.uptodate">
+
+    <war warfile="${war}"
+         compress="${compile.compress}"
+         webxml="WEB-INF/web.xml">
+      <fileset dir="${basedir}">
+        <include name="css/**/*"/>
+        <include name="images/**/*"/>
+        <include name="js/**/*"/>
+        <include name="theme/**/*"/>
+        <include name="WEB-INF/**/*"/>
+        <include name="zul/**/*"/>
+        <include name="index.zul"/>
+        <include name="theme.zs"/>
+        <include name="timeout.zul"/>
+        <exclude name="${src.dir}/**/*"/>
+        <exclude name="**/test/**"/>
+        <exclude name="**/web.xml"/>
+        <exclude name="WEB-INF/lib/*-sources.jar"/>
+        <exclude name="**/test.zul"/>
+      </fileset>
+      <manifest>
+        <attribute name="Specification-Title"    value="zkwebui"/>
+        <attribute name="Specification-Version"  value="${env.ADEMPIERE_VERSION}"/>
+        <attribute name="Specification-Vendor"   value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-Title"   value="webui.war"/>
+        <attribute name="Implementation-Version" value="${env.ADEMPIERE_VERSION_FILE} ${DSTAMP}-${TSTAMP}"/>
+        <attribute name="Implementation-Vendor"  value="${env.ADEMPIERE_VENDOR}"/>
+        <attribute name="Implementation-URL"     value="${env.ADEMPIERE_URL}"/>
+        <attribute name="Class-Path"             value="${jar.classpath}"/>
+      </manifest>
+    </war>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script and creates them again
+  ==============================================================================
+  -->
+  <target name="rebuild"
+          depends="clean,
+                   build"/>
+
+
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script.
+  ==============================================================================
+  -->
+  <target name="clean">
+
+    <delete dir="${build.dir}/org"/>
+    <delete file="${war}"/>
+
+  </target>
+  
 </project>

@@ -1,59 +1,227 @@
-<!-- ============================================= -->
-<!-- webApp                                         -->
-<!-- ============================================= -->
+<?xml version="1.0" encoding="utf-8"?>
 
-<project name="webApp" default="main" basedir=".">
 
-  <description>
-    Build the UI subproject within the Compiere project.
-  </description>
+<!--
+==============================================================================
+Ant file to build the ADempiere "JasperReportsWebApp" subproject
+==============================================================================
+-->
+<project name="JasperReportsWebApp"
+         default="build"
+         basedir=".">
 
-  <!-- set global properties for this build -->
-  <property name="src" value="src"/>
-  <property name="build.dir" value="build"/>
-  <property name="dist.dir" value="."/>
-
-  <!--<property environment="env"/>-->
   <import file="../utils_dev/properties.xml"/>
 
-  <!-- set path to include the necessary jar files for javac -->
-  <path id="project.class.path">
-    <pathelement path="${classpath}"/>
-  	<fileset dir="../jboss/client" includes="*.jar"/>
-    <pathelement location="../JasperReports/CompiereJasper.jar" />
-    <pathelement location="../base/Base.jar" />
+  <property name="src.dir"             value="src"/>
+  <property name="build.dir"           value="build"/>
+  <property name="dist.dir"            value="../lib"/>
+
+  <property name="jar.ejb.name"        value="webAppEJB.jar"/>
+  <property name="jar.ejb"             value="${dist.dir}/${jar.ejb.name}"/>
+  <property name="jar.ejb.client.name" value="webEJB-client.jar"/>
+  <property name="jar.ejb.client"      value="${dist.dir}/${jar.ejb.client.name}"/>
+  <property name="war.name"            value="webApp.war"/>
+  <property name="war"                 value="${dist.dir}/${war.name}"/>
+  <property name="ear.name"            value="webApp.ear"/>
+  <property name="ear"                 value="${dist.dir}/${ear.name}"/>
+
+  <path id="project.classpath">
+    <pathelement path="../lib/Base.jar"/>
+    <pathelement path="../jboss/client/jboss-ejb3x.jar"/>
+    <pathelement path="../jboss/client/servlet-api.jar"/>
   </path>
 
-  <target name="compile">
-  	<echo>------ Compiling webApp</echo>
-  	<mkdir dir="${build.dir}"/>
-    <javac target="1.6" srcdir="${src}" destdir="${build.dir}" deprecation="on" debug="on">
-      <classpath refid="project.class.path"/>
-    </javac>
+
+  <!--
+  ==============================================================================
+  Sets the timestamp and checks if the files need to be compiled at all
+  ==============================================================================
+  -->
+  <target name="init">
+
+    <echo>======================================================================</echo>
+    <echo>Building ADempiere subproject "JasperReportsWebApp"</echo>
+    <echo>======================================================================</echo>
+
+    <tstamp/>
+
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+
+    <uptodate property="jar.ejb.uptodate"
+              targetfile="${jar.ejb}">
+      <srcfiles dir="${src.dir}"
+                includes="**/*.java"/>
+    </uptodate>
+    
+    <uptodate property="jar.ejb.client.uptodate"
+              targetfile="${jar.ejb.client}">
+      <srcfiles dir="${src.dir}"
+                includes="**/*.java"/>
+    </uptodate>
+
   </target>
 
-  <target name="packaging">
-  	<echo>------ packaging</echo>  	
-  	<ant inheritall="false" antfile="packaging-build.xml"/>
-  </target>	
 
-  <target name="deploy-interface">
-  	<echo>------ deploying interfaces to JasperReports</echo>  	
-	<copy todir="../JasperReports/src">
-			<fileset dir="src" includes="org/compiere/interfaces/*.java"/>
-	</copy>
+  <!--
+  ==============================================================================
+  Compiles the .java files into .class files
+  ==============================================================================
+  -->
+  <target name="compile"
+          depends="init">
+
+    <javac srcdir="${src.dir}"
+           destdir="${build.dir}"
+           target="${compile.version}"
+           debug="${compile.debug}"
+           optimize="${compile.optimize}"
+           deprecation="${compile.deprecation}"
+           includeAntRuntime="false"
+           classpathref="project.classpath"/>
+
+    <copy todir="${build.dir}"
+          verbose="true">
+      <fileset dir="${src.dir}">
+        <include name="**/images/*"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.wav"/>
+        <include name="**/*.htm"/>
+        <include name="**/*.html"/>
+        <include name="**/*.properties"/>
+        <exclude name="**/package.html"/>
+      </fileset>
+    </copy>
+
   </target>
-	
+
+
+  <!--
+  ==============================================================================
+  Builds the Java Archive
+  ==============================================================================
+  -->
+  <target name="jar-webapp"
+          depends="compile"
+          unless="jar.ejb.uptodate">
+
+    <jar destfile="${jar.ejb}"
+         compress="${compile.compress}">
+      <zipfileset dir="${src.dir}/META-INF" prefix="META-INF">
+        <include name="ejb-jar.xml"/>
+      </zipfileset>
+      <zipfileset dir="${src.dir}/META-INF" prefix="META-INF">
+        <include name="jboss.xml"/>
+      </zipfileset>
+      <zipfileset dir="../lib">
+        <include name="CompiereJasper.jar"/>
+      </zipfileset>
+      <zipfileset dir="${build.dir}">
+        <include name="org/compiere/ejb/*.class"/>
+        <include name="org/compiere/interfaces/*.class"/>
+      </zipfileset>
+    </jar>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Builds the client Java Archive
+  ==============================================================================
+  -->
+
+  <target name="jar-webapp-client"
+          depends="compile"
+          unless="jar.ejb.client.uptodate">
+
+    <jar destfile="${jar.ejb.client}"
+         compress="${compile.compress}">
+      <zipfileset dir="${build.dir}">
+        <include name="org/compiere/interfaces/*.class"/>
+      </zipfileset>
+    </jar>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Builds the Web Application Archive
+  ==============================================================================
+  -->
+  <target name="war"
+          depends="jar-webapp-client">
+
+    <war destfile="${war}"
+         compress="${compile.compress}"
+         webxml="${src.dir}/WEB-INF/web.xml">
+      <lib dir="${dist.dir}">
+        <include name="${jar.ejb.client.name}"/>
+      </lib>
+      <zipfileset dir="${src.dir}/WEB-INF" prefix="WEB-INF">
+        <include name="jboss-web.xml"/>
+      </zipfileset>
+      <zipfileset dir="${build.dir}" prefix="WEB-INF/classes">
+        <include name="org/compiere/web/*.class"/>
+      </zipfileset>
+      <zipfileset dir="webroot">
+        <include name="*.jrxml"/>
+        <include name="*.xml"/>
+        <include name="*.html"/>
+      </zipfileset>
+    </war>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Builds the Enterprise Archive
+  ==============================================================================
+  -->
+  <target name="build"
+          depends="jar-webapp,
+                   war">
+
+    <ear destfile="${ear}"
+         compress="${compile.compress}"
+         appxml="${src.dir}/META-INF/application.xml">
+      <zipfileset dir="${dist.dir}">
+        <include name="${jar.ejb.name}"/>
+      </zipfileset>
+      <zipfileset dir="${dist.dir}">
+        <include name="${war.name}"/>
+      </zipfileset>
+    </ear>
+
+  </target>
+
+
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script and creates them again
+  ==============================================================================
+  -->
+  <target name="rebuild"
+          depends="clean,
+                   build"/>
+
+
+  <!--
+  ==============================================================================
+  Deletes all files created by this build script.
+  ==============================================================================
+  -->
   <target name="clean">
+
     <delete dir="${build.dir}"/>
-    <delete file="webApp.war" failonerror="false"/>
-    <delete file="webApp.ear" failonerror="false"/>
-    <delete file="webAppEJB.jar" failonerror="false"/>  	
-    <delete file="webEJB-client.jar" failonerror="false"/>  	
-  </target>
-	
-  <target name="main"  depends="compile, packaging, deploy-interface" description="initialization target">
- 	
+    <delete file="${war}"/>
+    <delete file="${ear}"/>
+    <delete file="${jar.ejb}"/>
+    <delete file="${jar.ejb.client}"/>
+
   </target>
 
 </project>
