@@ -1,0 +1,262 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.adempiere</groupId>
+	<artifactId>adempiere</artifactId>
+	<packaging>pom</packaging>
+	<name>ADempiere ERP</name>
+	<version>3.7.1-SNAPSHOT</version>
+	<url>http://www.adempiere.com/ADempiere_ERP</url>
+
+	<distributionManagement>
+		<repository>
+			<id>adempiere-releases</id>
+			<url>http://nexus.adempiere.de/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>adempiere-snapshots</id>
+			<url>http://nexus.adempiere.de/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
+	<scm>
+		<connection>scm:hg:http://adempiere.hg.sourceforge.net:8000/hgroot/adempiere/adempiere</connection>		
+		<url>http://adempiere.hg.sourceforge.net/hgweb/adempiere/adempiere/</url>
+	</scm>
+	
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<adempiere.version>3.7.1-SNAPSHOT</adempiere.version>
+  </properties>
+  
+  <modules>
+	<module>tools</module>
+	<module>base</module>
+  </modules>
+	
+  <dependencies>
+     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>compile</scope> <!-- SHOULD be test, but there are test case in source code. A refactor will be needed to move them into test sources -->
+    </dependency>
+	
+	<!-- J2EE -->
+
+    <dependency>
+      <groupId>javaee</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>5</version>
+      <scope>provided</scope>
+    </dependency>  
+	
+	<dependency>
+		<groupId>org.jboss.client</groupId>
+		<artifactId>jbossall-client</artifactId>
+		<version>4.2.3.GA</version>
+	</dependency>		
+	
+  	<dependency>
+  		<groupId>javax.mail</groupId>
+  		<artifactId>mail</artifactId>
+  		<version>1.4.3</version>
+  	</dependency>	
+	
+  	<dependency>
+  		<groupId>javax.jnlp</groupId>
+  		<artifactId>jnlp</artifactId>
+  		<version>1.0</version>
+  	</dependency>	
+	
+	<dependency>
+	  <groupId>org.apache.activemq</groupId>
+	  <artifactId>activemq-core</artifactId>
+	  <version>5.0.0</version>
+	  <exclusions>
+        <exclusion>
+          <groupId>org.apache.activemq</groupId>
+          <artifactId>activeio-core</artifactId>
+        </exclusion>
+      </exclusions>
+	</dependency>	
+	
+	<!-- Persistence -->
+	
+	<dependency>
+	  <groupId>c3p0</groupId>
+	  <artifactId>c3p0</artifactId>
+	  <version>0.9.1.2</version>
+	</dependency>  
+	
+	<dependency>
+	  <groupId>postgresql</groupId>
+	  <artifactId>postgresql</artifactId>
+	  <version>8.4-702.jdbc4</version>
+	</dependency>	
+
+	<dependency>
+	  <groupId>com.oracle</groupId>
+	  <artifactId>ojdbc6</artifactId>
+	  <version>11.2.0.1.0</version>
+	</dependency>		
+	
+	<dependency>
+	  <groupId>mysql</groupId>
+	  <artifactId>mysql-connector-java</artifactId>
+	  <version>5.1.17</version>
+	</dependency>	
+
+	<dependency>
+	  <groupId>c3p0</groupId>
+	  <artifactId>c3p0-oracle-thin-extras</artifactId>
+	  <version>0.9.0.2</version>
+	</dependency>	
+		
+	<!-- Scripting support -->
+
+  	<dependency>
+  		<groupId>org.codehaus.groovy</groupId>
+  		<artifactId>groovy-all</artifactId>
+  		<version>1.5.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.codehaus.groovy</groupId>
+  		<artifactId>groovy-engine</artifactId>
+  		<version>1.5.1</version>
+  	</dependency>	
+  	<dependency>
+  		<groupId>org.beanshell</groupId>
+  		<artifactId>bsh</artifactId>
+  		<version>2.0b5</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.beanshell</groupId>
+  		<artifactId>bsh-engine</artifactId>
+  		<version>2.0b5</version>
+  		<type>jar</type>
+  	</dependency>	
+  	<dependency>
+  		<groupId>org.python</groupId>
+  		<artifactId>jython</artifactId>
+  		<version>2.2.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.python</groupId>
+  		<artifactId>jython-engine</artifactId>
+  		<version>2.2.1</version>
+  	</dependency>
+	
+	<!-- Swing -->
+		
+  	<dependency>
+  		<groupId>com.miglayout</groupId>
+  		<artifactId>miglayout</artifactId>
+  		<version>3.7.1</version>
+  	</dependency>
+	
+	<dependency>
+	  <groupId>com.jgoodies</groupId>
+	  <artifactId>looks</artifactId>
+	  <version>2.0.4</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>org.swinglabs</groupId>
+	  <artifactId>swingx</artifactId>
+	  <version>1.6</version>
+	</dependency>
+	
+	<!-- Support libraries -->
+	
+  	<dependency>
+  		<groupId>commons-logging</groupId>
+  		<artifactId>commons-logging</artifactId>
+  		<version>1.1.0.jboss</version>
+  	</dependency>
+
+  	<dependency>
+  		<groupId>apache-log4j</groupId>
+  		<artifactId>log4j</artifactId>
+  		<version>1.2.14</version>
+  	</dependency>
+
+	<dependency>
+	  <groupId>commons-collections</groupId>
+	  <artifactId>commons-collections</artifactId>
+	  <version>3.1</version>
+	</dependency>	
+	
+	<dependency>
+	  <groupId>commons-net</groupId>
+	  <artifactId>commons-net</artifactId>
+	  <version>1.4.0</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>it.sauronsoftware</groupId>
+	  <artifactId>cron4j</artifactId>
+	  <version>2.2.1</version>
+	</dependency>	
+		
+	<!-- Payment -->
+	  
+	<dependency>
+	  <groupId>com.paypal</groupId>
+	  <artifactId>payflow</artifactId>
+	  <version>1.0</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>com.verisign</groupId>
+	  <artifactId>payment</artifactId>
+	  <version>1.0</version>
+	</dependency>	
+	
+	<!-- Reporting -->
+	
+	<dependency>
+	  <groupId>org.apache.poi</groupId>
+	  <artifactId>poi</artifactId>
+	  <version>3.5-FINAL</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>net.sourceforge.barbecue</groupId>
+	  <artifactId>barbecue</artifactId>
+	  <version>1.5-beta1</version>
+	</dependency>	
+	
+	<dependency>
+	  <groupId>com.lowagie</groupId>
+	  <artifactId>itext</artifactId>
+	  <version>2.1.7</version>
+	</dependency>	
+	
+	<dependency>
+	  <groupId>org.jpedal</groupId>
+	  <artifactId>jpedal</artifactId>
+	  <version>1.0</version>
+	</dependency>	
+	
+	<dependency>
+	  <groupId>jfree</groupId>
+	  <artifactId>jfreechart</artifactId>
+	  <version>1.0.13</version> 
+	</dependency>	
+	
+  </dependencies>	
+    
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>			
+		</plugins>
+	</build>
+</project>
