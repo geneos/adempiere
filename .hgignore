@@ -1,5 +1,6 @@
 syntax: glob
 build
+target
 
 syntax: regexp
 ^.DS_Store$
@@ -47,4 +48,3 @@ syntax: regexp
 ^zkwebui/dist$
 ^zkwebui/WEB-INF/classes$
 ^migration/my_processes_post_migration$
-^target
