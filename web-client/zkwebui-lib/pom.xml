@@ -1,0 +1,120 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>zkwebui-lib</artifactId>
+	<packaging>jar</packaging>
+	<name>ADempiere ERP - ZkWebUI Lib</name>
+	<url>http://www.adempiere.com/ADempiere_ERP</url>
+
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>adempiere</artifactId>
+		<version>3.7.1-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+
+	<dependencies>
+
+		<!-- Adempiere -->
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>base</artifactId>
+			<version>${adempiere.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>desktop-client</artifactId>
+			<version>${adempiere.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>patched-ecs</artifactId>
+			<version>${adempiere.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- J2EE -->
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- ZKOSS -->
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>zkwebui</artifactId>
+			<version>360</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zul</artifactId>
+			<version>3.6.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkex</artifactId>
+			<version>3.6.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkmax</artifactId>
+			<version>3.6.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zhtml</artifactId>
+			<version>3.6.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.zkoss.zkforge</groupId>
+			<artifactId>timelinez</artifactId>
+			<version>1.1-1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>3.7.3</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.zkoss.zkforge</groupId>
+			<artifactId>keylistener</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>org.zkoss.zkforge</groupId>
+		  <artifactId>fckez</artifactId>
+		  <version>2.6.1_2</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2</version>
+		</dependency>
+	</dependencies>
+</project>

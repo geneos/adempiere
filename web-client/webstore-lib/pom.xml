@@ -1,0 +1,75 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>webstore-lib</artifactId>
+	<packaging>jar</packaging>
+	<name>ADempiere ERP - Webstore Lib</name>
+	<url>http://www.adempiere.com/ADempiere_ERP</url>
+
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>adempiere</artifactId>
+		<version>3.7.1-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+
+	<dependencies>
+
+		<!-- Adempiere -->
+		
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>base</artifactId>
+			<version>${adempiere.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>webapps-lib</artifactId>
+			<version>${adempiere.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>patched-ecs</artifactId>
+			<version>${adempiere.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- J2EE -->
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
+      <version>2.2</version>
+      <scope>provided</scope>
+    </dependency>
+    
+		<dependency>
+		  <groupId>javax.servlet</groupId>
+		  <artifactId>jstl</artifactId>
+		  <version>1.1.2</version>
+		  <scope>provided</scope>
+		</dependency>		    		
+		
+		<!--  Support libs -->
+		
+		<dependency>
+		  <groupId>taglibs</groupId>
+		  <artifactId>standard</artifactId>
+		  <version>1.1.2</version>
+		  <scope>provided</scope>		  
+		</dependency>			
+		
+	</dependencies>
+</project>

@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>root-webapp</artifactId>
+	<packaging>war</packaging>
+	<name>ADempiere ERP - Root War</name>
+	<url>http://www.adempiere.com/ADempiere_ERP</url>
+
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>adempiere</artifactId>
+		<version>3.7.1-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+
+	<dependencies>
+		<!-- Adempiere -->
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>webroot-lib</artifactId>
+			<version>${adempiere.version}</version>
+		</dependency>
+
+		<!-- JNLP -->
+
+		<dependency>
+			<groupId>org.adempiere.jnlp</groupId>
+			<artifactId>jardiff</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere.jnlp</groupId>
+			<artifactId>jnlp-servlet</artifactId>
+			<version>1.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Class-Path>Adempiere.jar AdempiereSLib.jar adempiereApps.jar</Class-Path>
+						</manifestEntries>
+					</archive>
+					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>adempiereRoot</finalName>
+	</build>
+</project>

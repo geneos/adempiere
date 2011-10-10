@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>apps-webapp</artifactId>
+	<packaging>war</packaging>
+	<name>ADempiere ERP - Apps War</name>
+	<url>http://www.adempiere.com/ADempiere_ERP</url>
+
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>adempiere</artifactId>
+		<version>3.7.1-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+
+	<dependencies>
+		<!-- Adempiere -->
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>webapps-lib</artifactId>
+			<version>${adempiere.version}</version>
+		</dependency>
+		
+		<!-- Support Libs -->
+
+		<dependency>
+		  <groupId>commons-beanutils</groupId>
+		  <artifactId>commons-beanutils</artifactId>
+		  <version>1.7.0</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>commons-beanutils</groupId>
+		  <artifactId>commons-beanutils-core</artifactId>
+		  <version>1.7.0</version>
+		</dependency>		
+		
+		<dependency>
+		  <groupId>commons-beanutils</groupId>
+		  <artifactId>commons-beanutils-bean-collections</artifactId>
+		  <version>1.7.0</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>commons-codec</groupId>
+		  <artifactId>commons-codec</artifactId>
+		  <version>1.3</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>commons-collections</groupId>
+		  <artifactId>commons-collections</artifactId>
+		  <version>3.1</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>commons-digester</groupId>
+		  <artifactId>commons-digester</artifactId>
+		  <version>1.7</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>commons-fileupload</groupId>
+		  <artifactId>commons-fileupload</artifactId>
+		  <version>1.1</version>
+		</dependency>
+
+		<dependency>
+		  <groupId>commons-lang</groupId>
+		  <artifactId>commons-lang</artifactId>
+		  <version>2.1</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>commons-validator</groupId>
+		  <artifactId>commons-validator</artifactId>
+		  <version>1.2.0</version>
+		</dependency>		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Class-Path>Adempiere.jar AdempiereSLib.jar adempiereApps.jar</Class-Path>
+						</manifestEntries>
+					</archive>
+					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>adempiereApps</finalName>
+	</build>
+</project>
