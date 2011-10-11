@@ -23,6 +23,5 @@
 			<artifactId>base</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
-
 	</dependencies>
 </project>

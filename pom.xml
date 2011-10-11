@@ -1,4 +1,6 @@
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.adempiere</groupId>
 	<artifactId>adempiere</artifactId>
@@ -7,11 +9,9 @@
 	<version>3.7.1-SNAPSHOT</version>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
-	<!--
-		Note about port 8081:
-		When using port 80, the deploy fails with http error 413 ("Request entity too large").
-		This is probably an issues of the reverse proxy that we need to sort out later.
-	-->
+	<!-- Note about port 8081: When using port 80, the deploy fails with http 
+		error 413 ("Request entity too large"). This is probably an issues of the 
+		reverse proxy that we need to sort out later. -->
 	<distributionManagement>
 		<repository>
 			<id>adempiere-releases</id>
@@ -22,57 +22,68 @@
 			<url>http://nexus.adempiere.de:8081/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<scm>
-		<connection>scm:hg:http://adempiere.hg.sourceforge.net:8000/hgroot/adempiere/adempiere</connection>		
+		<connection>scm:hg:http://adempiere.hg.sourceforge.net:8000/hgroot/adempiere/adempiere</connection>
 		<url>http://adempiere.hg.sourceforge.net/hgweb/adempiere/adempiere/</url>
 	</scm>
-	
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<adempiere.version>3.7.1-SNAPSHOT</adempiere.version>
-  </properties>
-  
-  <modules>
-	
-	<!-- Common Modules -->
-  
-	<module>common/patched-ecs</module>
-	<module>common/base</module>
-	
-	<!--  Server -->
-	
-	<module>server/server-lib</module>
-	<module>server/server-ejb</module>
-	
-	<!-- Desktop Client -->
-	
-	<module>desktop-client/client</module>
-	
-	<!-- Web Client -->
-	
-	<module>web-client/root-lib</module>
-	<module>web-client/root-webapp</module>
-	<module>web-client/apps-lib</module>
-	<module>web-client/apps-webapp</module>
-	<module>web-client/webcm-lib</module>
-	<module>web-client/webcm-webapp</module>	
-	<module>web-client/webstore-lib</module>
-	<module>web-client/webstore-webapp</module>
-	<module>web-client/zkwebui-lib</module>
-	<module>web-client/zkwebui-webapp</module>
-	
-	<!-- Assemblies -->
-	
-	<module>assembly/webcm-ear</module>
-	<module>assembly/webstore-ear</module>
-	
-	
-  </modules>
-	
-  <dependencies>
-  </dependencies>	
-    
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<adempiere.version>3.7.1-SNAPSHOT</adempiere.version>
+	</properties>
+
+	<modules>
+
+		<!-- Common Modules -->
+
+		<module>common/patched-ecs</module>
+		<module>common/sqlj</module>
+		<module>common/base</module>		
+		
+		<!-- Jasper Reports -->
+
+		<module>JasperReports/jasperreports-lib</module>
+		<module>JasperReports/jasperreports-ejb</module>
+		<module>JasperReports/jasperreports-webapp</module>
+		
+		<!-- Server -->
+
+		<module>server/server-lib</module>
+		<module>server/server-ejb</module>
+		<module>server/glassfishfacet</module>
+		<module>server/jbossfacet</module>
+		<module>server/install</module>
+
+		<!-- Desktop Client -->
+
+		<module>desktop-client/client</module>
+
+		<!-- Web Client -->
+
+		<module>web-client/root-lib</module>
+		<module>web-client/root-webapp</module>
+		<module>web-client/apps-lib</module>
+		<module>web-client/apps-webapp</module>
+		<module>web-client/webcm-lib</module>
+		<module>web-client/webcm-webapp</module>
+		<module>web-client/webstore-lib</module>
+		<module>web-client/webstore-webapp</module>
+		<module>web-client/zkwebui-lib</module>
+		<module>web-client/zkwebui-webapp</module>
+
+		<!-- Assemblies -->
+
+		<module>assembly/webcm-ear</module>
+		<module>assembly/webstore-ear</module>
+		<module>assembly/jasperreports-ear</module>
+		<module>assembly/adempiere-ear</module>
+
+	</modules>
+
+	<dependencies>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -84,7 +95,7 @@
 					<target>1.6</target>
 					<encoding>UTF-8</encoding>
 				</configuration>
-			</plugin>			
+			</plugin>
 		</plugins>
 	</build>
 </project>
