@@ -43,9 +43,9 @@
 		
 		<!-- Jasper Reports -->
 
-		<module>JasperReports/jasperreports-lib</module>
-		<module>JasperReports/jasperreports-ejb</module>
-		<module>JasperReports/jasperreports-webapp</module>
+		<module>jasperreports/jasperreports-lib</module>
+		<module>jasperreports/jasperreports-ejb</module>
+		<module>jasperreports/jasperreports-webapp</module>
 		
 		<!-- Server -->
 
