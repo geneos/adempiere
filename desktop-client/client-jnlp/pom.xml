@@ -53,6 +53,7 @@
 				</executions>
 				<configuration>
 					<verbose>true</verbose>
+					<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
 					<jnlp>
 						<J2seVersion>1.6+</J2seVersion>
 						<OfflineAllowed>true</OfflineAllowed>
