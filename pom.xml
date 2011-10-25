@@ -58,6 +58,7 @@
 		<!-- Desktop Client -->
 
 		<module>desktop-client/client</module>
+		<module>desktop-client/client-jnlp</module>
 
 		<!-- Web Client -->
 

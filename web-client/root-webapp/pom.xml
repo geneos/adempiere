@@ -25,6 +25,13 @@
 		<!-- JNLP -->
 
 		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>desktop-client-jnlp</artifactId>
+			<version>3.7.1-SNAPSHOT</version>
+			<type>zip</type>
+		</dependency>
+
+		<dependency>
 			<groupId>org.adempiere.jnlp</groupId>
 			<artifactId>jardiff</artifactId>
 			<version>1.0</version>
@@ -35,10 +42,39 @@
 			<artifactId>jnlp-servlet</artifactId>
 			<version>1.0</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
+
+			<plugin>
+				<!-- Taken from http://mojo.codehaus.org/webstart/webstart-maven-plugin/examples/war_bundle_1.html#single_webstart_app.html -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<!-- Copy the webstart bundle in as a resource before packaging starts. -->
+						<phase>process-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>org.adempiere</groupId>
+							<artifactId>desktop-client-jnlp</artifactId>
+							<version>${adempiere.version}</version>
+							<type>zip</type>
+						</artifactItem>
+					</artifactItems>
+					<outputDirectory>${project.build.directory}/${project.build.finalName}/webstart</outputDirectory>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
