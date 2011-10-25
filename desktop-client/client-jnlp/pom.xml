@@ -67,6 +67,7 @@
 						<MainClass>org.compiere.Adempiere</MainClass>
 						<OutputFile>adempiere.jnlp</OutputFile>
 					</jnlp>
+					<jnlpExtensions></jnlpExtensions>
 				</configuration>
 			</plugin>
 		</plugins>
