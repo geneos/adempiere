@@ -26,9 +26,16 @@
 		
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>desktop-client</artifactId>	<!--  Needed due to horrible depencies from web client to desktip client -->
+			<artifactId>desktop-client</artifactId>
 			<version>${adempiere.version}</version>			
 		</dependency>
+		
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>jasperreports-lib</artifactId>
+			<version>${adempiere.version}</version>			
+			<scope>runtime</scope>
+		</dependency>							
 				
 		<dependency>
 			<groupId>org.adempiere</groupId>
@@ -36,19 +43,7 @@
 			<version>${adempiere.version}</version>
 			<type>ejb</type>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>glassfish-facet</artifactId>
-			<version>${adempiere.version}</version>			
-		</dependency>		
-
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>jboss-facet</artifactId>
-			<version>${adempiere.version}</version>			
-		</dependency>				
-
+				
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>root-webapp</artifactId>

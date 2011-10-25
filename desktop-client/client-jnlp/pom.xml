@@ -24,6 +24,12 @@
 			<artifactId>desktop-client</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>jasperreports-lib</artifactId>
+			<version>${adempiere.version}</version>						
+		</dependency>		
 	</dependencies>
 	
 	<build>
