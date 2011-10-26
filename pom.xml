@@ -181,12 +181,15 @@
 					<aggregate>true</aggregate>
 				</configuration>
 			</plugin>
+			<!-- generate a findbugs report -->
+			<!--
+			Commenting it out for now, as nexus.adempiere.de can't find the plugin 
 			<plugin>
-				<!-- generate a findbugs report -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>2.3.3-SNAPSHOT</version>
 			</plugin>
+			 -->
 			<plugin>
 				<!-- generate browsable source code -->
 				<groupId>org.apache.maven.plugins</groupId>
