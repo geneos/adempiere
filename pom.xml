@@ -9,10 +9,10 @@
 	<version>3.7.1-SNAPSHOT</version>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
-	<!-- Note about port 8081: When using port 80, the deploy fails with http 
+	<distributionManagement>
+		<!-- Note about port 8081: When using port 80, the deploy fails with http 
 		error 413 ("Request entity too large"). This is probably an issues of the 
 		reverse proxy that we need to sort out later. -->
-	<distributionManagement>
 		<repository>
 			<id>adempiere-releases</id>
 			<url>http://nexus.adempiere.de:8081/nexus/content/repositories/releases/</url>
@@ -97,6 +97,71 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+			<plugin>
+				<!-- attach the sources to our artefacts -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		
+			<plugin>
+				<!-- generate javadocs -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<aggregate>true</aggregate>
+					<show>public</show>
+				</configuration>
+				<executions>
+					<execution>
+						<id>aggregate</id>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+						<phase>site</phase>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+	
+	
+	<reporting>
+		<plugins>
+			
+      		<plugin>
+      			<!--  generate changelog -->
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-changelog-plugin</artifactId>
+        		<version>2.2</version>
+      		</plugin>
+			<plugin>
+				<!-- generate a pmd report -->
+       			<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-pmd-plugin</artifactId>
+        		<version>2.5</version>
+      		</plugin>
+      		<plugin>
+      			<!-- generate a findbugs report -->
+        		<groupId>org.codehaus.mojo</groupId>
+        		<artifactId>findbugs-maven-plugin</artifactId>
+        		<version>2.3.3-SNAPSHOT</version>
+      		</plugin>
+      		<plugin>
+      			<!-- generate browsable source code -->	
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-jxr-plugin</artifactId>
+        		<version>2.3</version>
+      		</plugin>
+		</plugins>
+	</reporting>
 </project>
