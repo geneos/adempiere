@@ -41,8 +41,7 @@
 
 		<!-- Common Modules -->
 
-		<module>common/patched-ecs</module>
-		<module>common/sqlj</module>
+		<module>common/patched-ecs</module>		
 		<module>common/base</module>		
 		
 		<!-- Jasper Reports -->
