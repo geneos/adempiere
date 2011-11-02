@@ -32,7 +32,7 @@ public class X_C_PaySchedule extends PO implements I_C_PaySchedule, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20110831L;
+	private static final long serialVersionUID = 20111101L;
 
     /** Standard Constructor */
     public X_C_PaySchedule (Properties ctx, int C_PaySchedule_ID, String trxName)
@@ -44,7 +44,10 @@ public class X_C_PaySchedule extends PO implements I_C_PaySchedule, I_Persistent
 			setC_PaySchedule_ID (0);
 			setDiscount (Env.ZERO);
 			setDiscountDays (0);
+			setFixMonthOffset (0);
+// 0
 			setGraceDays (0);
+			setIsDueFixed (false);
 			setIsValid (false);
 			setNetDays (0);
 			setPercentage (Env.ZERO);
@@ -79,9 +82,9 @@ public class X_C_PaySchedule extends PO implements I_C_PaySchedule, I_Persistent
       return sb.toString();
     }
 
-	public org.compiere.model.I_C_PaymentTerm getC_PaymentTerm() throws RuntimeException
+	public I_C_PaymentTerm getC_PaymentTerm() throws RuntimeException
     {
-		return (org.compiere.model.I_C_PaymentTerm)MTable.get(getCtx(), org.compiere.model.I_C_PaymentTerm.Table_Name)
+		return (I_C_PaymentTerm)MTable.get(getCtx(), I_C_PaymentTerm.Table_Name)
 			.getPO(getC_PaymentTerm_ID(), get_TrxName());	}
 
 	/** Set Payment Term.
@@ -178,6 +181,26 @@ public class X_C_PaySchedule extends PO implements I_C_PaySchedule, I_Persistent
 		return ii.intValue();
 	}
 
+	/** Set Fix month offset.
+		@param FixMonthOffset 
+		Number of months (0=same, 1=following)
+	  */
+	public void setFixMonthOffset (int FixMonthOffset)
+	{
+		set_Value (COLUMNNAME_FixMonthOffset, Integer.valueOf(FixMonthOffset));
+	}
+
+	/** Get Fix month offset.
+		@return Number of months (0=same, 1=following)
+	  */
+	public int getFixMonthOffset () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_FixMonthOffset);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Grace Days.
 		@param GraceDays 
 		Days after due date to send first dunning letter
@@ -196,6 +219,30 @@ public class X_C_PaySchedule extends PO implements I_C_PaySchedule, I_Persistent
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Fixed due date.
+		@param IsDueFixed 
+		Payment is due on a fixed date
+	  */
+	public void setIsDueFixed (boolean IsDueFixed)
+	{
+		set_Value (COLUMNNAME_IsDueFixed, Boolean.valueOf(IsDueFixed));
+	}
+
+	/** Get Fixed due date.
+		@return Payment is due on a fixed date
+	  */
+	public boolean isDueFixed () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsDueFixed);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Valid.

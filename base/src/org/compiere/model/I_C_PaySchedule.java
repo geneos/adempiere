@@ -75,7 +75,7 @@ public interface I_C_PaySchedule
 	  */
 	public int getC_PaymentTerm_ID();
 
-	public org.compiere.model.I_C_PaymentTerm getC_PaymentTerm() throws RuntimeException;
+	public I_C_PaymentTerm getC_PaymentTerm() throws RuntimeException;
 
     /** Column name C_PaySchedule_ID */
     public static final String COLUMNNAME_C_PaySchedule_ID = "C_PaySchedule_ID";
@@ -132,6 +132,19 @@ public interface I_C_PaySchedule
 	  */
 	public int getDiscountDays();
 
+    /** Column name FixMonthOffset */
+    public static final String COLUMNNAME_FixMonthOffset = "FixMonthOffset";
+
+	/** Set Fix month offset.
+	  * Number of months (0=same, 1=following)
+	  */
+	public void setFixMonthOffset (int FixMonthOffset);
+
+	/** Get Fix month offset.
+	  * Number of months (0=same, 1=following)
+	  */
+	public int getFixMonthOffset();
+
     /** Column name GraceDays */
     public static final String COLUMNNAME_GraceDays = "GraceDays";
 
@@ -157,6 +170,19 @@ public interface I_C_PaySchedule
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsDueFixed */
+    public static final String COLUMNNAME_IsDueFixed = "IsDueFixed";
+
+	/** Set Fixed due date.
+	  * Payment is due on a fixed date
+	  */
+	public void setIsDueFixed (boolean IsDueFixed);
+
+	/** Get Fixed due date.
+	  * Payment is due on a fixed date
+	  */
+	public boolean isDueFixed();
 
     /** Column name IsValid */
     public static final String COLUMNNAME_IsValid = "IsValid";

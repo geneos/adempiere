@@ -21,6 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -33,6 +35,9 @@ import org.compiere.util.TimeUtil;
  *	Invoice Payment Schedule Model 
  *	
  *  @author Jorg Janke
+ *  
+ *  @author Silvano Trinchero, Freepath www.freepath.it
+ *		<li> FR [ 3432213 ]
  *  @version $Id: MInvoicePaySchedule.java,v 1.3 2006/07/30 00:51:03 jjanke Exp $
  */
 public class MInvoicePaySchedule extends X_C_InvoicePaySchedule
@@ -171,11 +176,45 @@ public class MInvoicePaySchedule extends X_C_InvoicePaySchedule
 			setIsValid(true);
 		}
 		
-		//	Dates		
-		Timestamp dueDate = TimeUtil.addDays(invoice.getDateInvoiced(), paySchedule.getNetDays());
-		setDueDate (dueDate);
+		// FR3432213: if PaymentTerm is DueFixed at end of the month and scheduled at multiple of 30, add months
+		
+		if(paySchedule.isDueFixed())
+		{
+			MPaymentTerm payTerm = paySchedule.getParent();
+			
+			// use the standard logic to get the starting date (avoid to use DUAL)
+			String sql = "SELECT paymenttermduedate(?, ?) FROM C_PAYMENTTERM WHERE C_PAYMENTTERM_ID = ?";
+			Timestamp startDate = DB.getSQLValueTS(invoice.get_TrxName(), sql
+						, payTerm.getC_PaymentTerm_ID(), invoice.getDateInvoiced(), payTerm.getC_PaymentTerm_ID());
+			
+			int months = paySchedule.getFixMonthOffset();
+
+			// add months to calculate Due Date, adjust day if PaymentTerm > calDate.DAY
+	
+			Calendar calDate = GregorianCalendar.getInstance();
+			calDate.setTime(startDate);
+			calDate.add(Calendar.MONTH, months);
+			
+			int iMonthDay =  payTerm.getFixMonthDay();
+			
+			if(iMonthDay > calDate.get(Calendar.DAY_OF_MONTH))
+			{
+				iMonthDay = Math.min(iMonthDay, calDate.getActualMaximum(Calendar.DAY_OF_MONTH));				
+				calDate.set(Calendar.DAY_OF_MONTH,iMonthDay);
+			}
+						
+			setDueDate (TimeUtil.getDay(calDate.getTimeInMillis()));
+		}
+		else // old behaviour
+		{		
+			//	Dates		
+			Timestamp dueDate = TimeUtil.addDays(invoice.getDateInvoiced(), paySchedule.getNetDays());
+			setDueDate (dueDate);
+		}
+		
 		Timestamp discountDate = TimeUtil.addDays(invoice.getDateInvoiced(), paySchedule.getDiscountDays());
 		setDiscountDate (discountDate);
+		
 	}	//	MInvoicePaySchedule
 	
 	/**	Parent						*/
