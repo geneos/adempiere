@@ -48,3 +48,8 @@ syntax: regexp
 ^zkwebui/dist$
 ^zkwebui/WEB-INF/classes$
 ^migration/my_processes_post_migration$
+
+syntax: regexp
+\.settings$
+\.project$
+\.classpath$
