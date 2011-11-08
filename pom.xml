@@ -83,6 +83,12 @@
 		<module>assembly/jasperreports-ear</module>
 		<module>assembly/adempiere-ear</module>
 
+		
+		<!-- work in progress (ts) -->
+		<module>application-server/jboss</module>
+		<module>misc</module>
+		<module>assembly/adempiere-dist</module>
+
 	</modules>
 
 	<dependencies>

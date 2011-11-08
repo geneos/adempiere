@@ -1,0 +1,236 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>adempiere-dist</artifactId>
+	<packaging>pom</packaging>
+	<name>ADempiere ERP - Distributable</name>
+	<url>http://www.adempiere.com/ADempiere_ERP</url>
+
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>adempiere</artifactId>
+		<version>3.7.1-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>adempiere-ear</artifactId>
+			<version>${project.version}</version>
+			<type>ear</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>jboss</artifactId>
+			<version>${project.version}</version>
+			<classifier>zip</classifier>
+			<type>zip</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>misc</artifactId>
+			<version>${project.version}</version>
+			<classifier>zip</classifier>
+			<type>zip</type>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-resources-plugin</artifactId> 
+				<version>2.5</version> <configuration> <outputDirectory>${project.build.directory}/Adempiere</outputDirectory> 
+				<resources> <resource> <directory>${basedir}/utils</directory> </resource> 
+				</resources> </configuration> <executions> <execution> <id>copy-stuff</id> 
+				<phase>package</phase> <goals> <goal>copy-resources</goal> </goals> </execution> 
+				</executions> </plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> 
+				<version>2.2.1</version> <configuration> <descriptors> <descriptor>src/main/assembly/jboss-zip.xml</descriptor> 
+				</descriptors> </configuration> <executions> <execution> <id>make-assembly</id> 
+				<phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
+				</executions> </plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<configuration>
+							<target>
+								<!-- from /adempiere/install/build.xml target=installDistribution -->
+
+								<copy file="${project.build.directory}/misc/lib/CheckConflicts.sh"
+									tofile="${project.build.directory}/Adempiere/lib/CheckConflicts.sh" />
+								<!-- Base Directory -->
+								<!-- TODO from /adempiere/install/build.xml <copy todir="${build.dir}/Adempiere"> 
+									<fileset dir="${src.dir}"/> </copy> <copy todir="${build.dir}/Adempiere/images"> 
+									<fileset dir="${src.dir}/images"/> </copy> -->
+								<copy file="${project.build.directory}/misc/utils/RUN_Adempiere.bat"
+									todir="${project.build.directory}/Adempiere/" />
+								<copy file="${project.build.directory}/misc/utils/RUN_Adempiere.sh"
+									todir="${project.build.directory}/Adempiere/" />
+
+								<copy file="${project.build.directory}/misc/launch4J/Adempiere.ico"
+									tofile="${project.build.directory}/Adempiere/lib/Adempiere.ico" />
+
+								<copy todir="${project.build.directory}/Adempiere/lib">
+									<fileset dir="${project.build.directory}/misc/lib">
+										<include name="**/*ar" />
+										<include name="**/*xml" />
+										<include name="**/*0" />
+									</fileset>
+								</copy>
+
+								<copy
+									file="${project.build.directory}/misc/launch4J/Release/Adempiere.exe"
+									todir="${project.build.directory}/Adempiere/lib" />
+
+								<!-- TODO from /adempiere/install/build.xml <copy file="CInstall.jar" 
+									todir="${build.dir}/Adempiere/lib"/> <copy file="../sqlj/sqlj.jar" todir="${build.dir}/Adempiere/lib"/> 
+									<copy file="../JasperReports/CompiereJasperReqs.jar" todir="${build.dir}/Adempiere/lib"/> -->
+								<concat destfile="${project.build.directory}/Adempiere/lib/index.html">AdempiereHome</concat>
+
+								<!-- Utils Directory -->
+								<mkdir dir="${project.build.directory}/Adempiere/utils" />
+								<copy todir="${project.build.directory}/Adempiere/utils">
+									<fileset dir="${project.build.directory}/misc/utils"
+										excludes="**/pg/**,.project" />
+								</copy>
+								<copy todir="${project.build.directory}/Adempiere/utils/oracle">
+									<fileset
+										dir="${project.build.directory}/misc/db/database/Startup/oracle"
+										includes="*.sql" />
+								</copy>
+								<copy todir="${project.build.directory}/Adempiere/utils/postgresql">
+									<fileset
+										dir="${project.build.directory}/misc/db/database/Startup/postgresql"
+										includes="*.sql" />
+								</copy>
+								<copy todir="${project.build.directory}/Adempiere/utils/oracleXE">
+									<fileset
+										dir="${project.build.directory}/misc/db/database/Startup/oracleXE"
+										includes="*.sql" />
+								</copy>
+
+
+								<!-- Data Directory -->
+								<mkdir dir="${project.build.directory}/Adempiere/data" />
+								<unjar src="${project.build.directory}/misc/data/seed/Adempiere.jar"
+									dest="${project.build.directory}/Adempiere/data" />
+								<unjar
+									src="${project.build.directory}/misc/data/seed/Adempiere_pg.jar"
+									dest="${project.build.directory}/Adempiere/data" />
+								<mkdir dir="${project.build.directory}/Adempiere/data/import" />
+								<copy todir="${project.build.directory}/Adempiere/data/import">
+									<fileset dir="${project.build.directory}/misc/data/import">
+										<include name="**/Accounting*.*" />
+										<include name="Example*.csv" />
+									</fileset>
+								</copy>
+								<copy todir="${project.build.directory}/Adempiere/data/">
+									<fileset dir="${project.build.directory}/misc/data/seed/">
+										<include name="**/*.jar" />
+									</fileset>
+								</copy>
+
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>unpack-misc</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>misc</artifactId>
+									<type>zip</type>
+									<classifier>zip</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/misc</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-jboss</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>jboss</artifactId>
+									<type>zip</type>
+									<classifier>zip</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/Adempiere</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-adempiere-ear</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>adempiere-ear</artifactId>
+									<type>ear</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/Adempiere/jboss/server/adempiere/deploy/</outputDirectory>
+									<destFileName>adempiere.ear</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/adempiere.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
