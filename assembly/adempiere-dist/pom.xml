@@ -39,6 +39,12 @@
 			<type>zip</type>
 		</dependency>
 
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>install</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -63,82 +69,163 @@
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
+
+								<property name="build.dir" value="${project.build.directory}" />
+								<property name="src.dir"
+									value="${project.build.directory}/install/Adempiere" />
+								<property name="utils.dir" value="${project.build.directory}/misc/utils" />
+								<property name="launch.dir"
+									value="${project.build.directory}/misc/launch4J" />
+								<property name="lib.dir" value="${project.build.directory}/misc/lib" />
+								<property name="dbStartup.dir"
+									value="${project.build.directory}/misc/db/database/Startup" />
+								<property name="data.dir" value="${project.build.directory}/misc/data" />
+								
 								<!-- from /adempiere/install/build.xml target=installDistribution -->
+								<mkdir dir="${build.dir}" />
+								<mkdir dir="${build.dir}/Adempiere" />
+								<mkdir dir="${build.dir}/Adempiere/images" />
+								<mkdir dir="${build.dir}/Adempiere/packages" />
+								<mkdir dir="${build.dir}/Adempiere/zkpackages" />
 
-								<copy file="${project.build.directory}/misc/lib/CheckConflicts.sh"
-									tofile="${project.build.directory}/Adempiere/lib/CheckConflicts.sh" />
+								<mkdir dir="${build.dir}/Adempiere/packages/liberoMFG" />
+								<mkdir dir="${build.dir}/Adempiere/packages/liberoMFG/lib" />
+								<!-- 
+									TODO: Download dependencies from nexus 
+								<copy file="../packages/liberoMFG.jar"
+									tofile="${build.dir}/Adempiere/packages/liberoMFG/lib/liberoMFG.jar" />
+
+								<mkdir dir="${build.dir}/Adempiere/zkpackages/liberoMFG" />
+								<mkdir dir="${build.dir}/Adempiere/zkpackages/liberoMFG/lib" />
+								<copy file="../zkpackages/liberozkMFG.jar"
+									tofile="${build.dir}/Adempiere/zkpackages/liberoMFG/lib/liberozkMFG.jar" />
+
+								<mkdir dir="${build.dir}/Adempiere/packages/liberoHR" />
+								<mkdir dir="${build.dir}/Adempiere/packages/liberoHR/lib" />
+								<copy file="../packages/liberoHR.jar"
+									tofile="${build.dir}/Adempiere/packages/liberoHR/lib/liberoHR.jar" />
+								-->
+								<copy file="${lib.dir}/CheckConflicts.sh" tofile="${build.dir}/Adempiere/lib/CheckConflicts.sh" />
+
 								<!-- Base Directory -->
-								<!-- TODO from /adempiere/install/build.xml <copy todir="${build.dir}/Adempiere"> 
-									<fileset dir="${src.dir}"/> </copy> <copy todir="${build.dir}/Adempiere/images"> 
-									<fileset dir="${src.dir}/images"/> </copy> -->
-								<copy file="${project.build.directory}/misc/utils/RUN_Adempiere.bat"
-									todir="${project.build.directory}/Adempiere/" />
-								<copy file="${project.build.directory}/misc/utils/RUN_Adempiere.sh"
-									todir="${project.build.directory}/Adempiere/" />
+								<copy todir="${build.dir}/Adempiere">
+									<fileset dir="${src.dir}" />
+								</copy>
+								<copy todir="${build.dir}/Adempiere/images">
+									<fileset dir="${src.dir}/images" />
+								</copy>
+								<copy file="${utils.dir}/RUN_Adempiere.bat" todir="${build.dir}/Adempiere/" />
+								<copy file="${utils.dir}/RUN_Adempiere.sh" todir="${build.dir}/Adempiere/" />
 
-								<copy file="${project.build.directory}/misc/launch4J/Adempiere.ico"
-									tofile="${project.build.directory}/Adempiere/lib/Adempiere.ico" />
 
-								<copy todir="${project.build.directory}/Adempiere/lib">
-									<fileset dir="${project.build.directory}/misc/lib">
+								<!-- Lib Directory -->
+								<mkdir dir="${build.dir}/Adempiere/lib" />
+								<copy file="${launch.dir}/Adempiere.ico" tofile="${build.dir}/Adempiere/lib/Adempiere.ico" />
+								<!-- copy file="${launch.dir}/jlaunchs.ico" tofile="${build.dir}/Adempiere/lib/Adempieres.ico"/ -->
+								<copy todir="${build.dir}/Adempiere/lib">
+									<fileset dir="${lib.dir}">
 										<include name="**/*ar" />
 										<include name="**/*xml" />
 										<include name="**/*0" />
 									</fileset>
 								</copy>
-
-								<copy
-									file="${project.build.directory}/misc/launch4J/Release/Adempiere.exe"
-									todir="${project.build.directory}/Adempiere/lib" />
-
-								<!-- TODO from /adempiere/install/build.xml <copy file="CInstall.jar" 
-									todir="${build.dir}/Adempiere/lib"/> <copy file="../sqlj/sqlj.jar" todir="${build.dir}/Adempiere/lib"/> 
-									<copy file="../JasperReports/CompiereJasperReqs.jar" todir="${build.dir}/Adempiere/lib"/> -->
-								<concat destfile="${project.build.directory}/Adempiere/lib/index.html">AdempiereHome</concat>
+								<copy file="${launch.dir}/Release/Adempiere.exe" todir="${build.dir}/Adempiere/lib" />
+								<!-- 
+									TODO
+								<copy file="CInstall.jar" todir="${build.dir}/Adempiere/lib" />
+								<copy file="../sqlj/sqlj.jar" todir="${build.dir}/Adempiere/lib" />
+								<copy file="../JasperReports/CompiereJasperReqs.jar" todir="${build.dir}/Adempiere/lib" />
+								<concat destfile="${build.dir}/Adempiere/lib/index.html">AdempiereHome</concat>
+								-->
 
 								<!-- Utils Directory -->
-								<mkdir dir="${project.build.directory}/Adempiere/utils" />
-								<copy todir="${project.build.directory}/Adempiere/utils">
-									<fileset dir="${project.build.directory}/misc/utils"
-										excludes="**/pg/**,.project" />
+								<mkdir dir="${build.dir}/Adempiere/utils" />
+								<copy todir="${build.dir}/Adempiere/utils">
+									<fileset dir="${utils.dir}" excludes="**/pg/**,.project" />
 								</copy>
-								<copy todir="${project.build.directory}/Adempiere/utils/oracle">
-									<fileset
-										dir="${project.build.directory}/misc/db/database/Startup/oracle"
-										includes="*.sql" />
+								<copy todir="${build.dir}/Adempiere/utils/oracle">
+									<fileset dir="${dbStartup.dir}/oracle" includes="*.sql" />
 								</copy>
-								<copy todir="${project.build.directory}/Adempiere/utils/postgresql">
-									<fileset
-										dir="${project.build.directory}/misc/db/database/Startup/postgresql"
-										includes="*.sql" />
+								<copy todir="${build.dir}/Adempiere/utils/postgresql">
+									<fileset dir="${dbStartup.dir}/postgresql" includes="*.sql" />
 								</copy>
-								<copy todir="${project.build.directory}/Adempiere/utils/oracleXE">
-									<fileset
-										dir="${project.build.directory}/misc/db/database/Startup/oracleXE"
-										includes="*.sql" />
+								<copy todir="${build.dir}/Adempiere/utils/oracleXE">
+									<fileset dir="${dbStartup.dir}/oracleXE" includes="*.sql" />
 								</copy>
 
 
 								<!-- Data Directory -->
-								<mkdir dir="${project.build.directory}/Adempiere/data" />
-								<unjar src="${project.build.directory}/misc/data/seed/Adempiere.jar"
-									dest="${project.build.directory}/Adempiere/data" />
-								<unjar
-									src="${project.build.directory}/misc/data/seed/Adempiere_pg.jar"
-									dest="${project.build.directory}/Adempiere/data" />
-								<mkdir dir="${project.build.directory}/Adempiere/data/import" />
-								<copy todir="${project.build.directory}/Adempiere/data/import">
-									<fileset dir="${project.build.directory}/misc/data/import">
+								<mkdir dir="${build.dir}/Adempiere/data" />
+								<unjar src="${data.dir}/seed/Adempiere.jar" dest="${build.dir}/Adempiere/data" />
+								<unjar src="${data.dir}/seed/Adempiere_pg.jar" dest="${build.dir}/Adempiere/data" />
+								<!--unjar src="${data.dir}/seed/Adempiere_mysql.jar" dest="${build.dir}/Adempiere/data"/ -->
+								<mkdir dir="${build.dir}/Adempiere/data/import" />
+								<copy todir="${build.dir}/Adempiere/data/import">
+									<fileset dir="${data.dir}/import">
 										<include name="**/Accounting*.*" />
 										<include name="Example*.csv" />
 									</fileset>
 								</copy>
-								<copy todir="${project.build.directory}/Adempiere/data/">
-									<fileset dir="${project.build.directory}/misc/data/seed/">
+								<copy todir="${build.dir}/Adempiere/data/">
+									<fileset dir="${data.dir}/seed/">
 										<include name="**/*.jar" />
 									</fileset>
 								</copy>
 
+
+								<!-- JBoss Directory -->
+								<!-- 
+								<mkdir dir="${build.dir}/Adempiere/jboss" />
+								<mkdir dir="${build.dir}/Adempiere/jboss/bin" />
+								<copy todir="${build.dir}/Adempiere/jboss/bin">
+									<fileset dir="${jboss.dir}/bin" excludes="**/CVS/**" />
+								</copy>
+								<mkdir dir="${build.dir}/Adempiere/jboss/lib" />
+								<copy todir="${build.dir}/Adempiere/jboss/lib">
+									<fileset dir="${jboss.dir}/lib" excludes="**/CVS/**" />
+								</copy>
+								<mkdir dir="${build.dir}/Adempiere/jboss/server" />
+								<copy todir="${build.dir}/Adempiere/jboss/server">
+									<fileset dir="${jboss.dir}/server" excludes="**/CVS/**" />
+								</copy>
+ 								-->
+ 								
+								<!-- GlassFish -->
+								<!-- 
+								<mkdir dir="${build.dir}/Adempiere/glassfish" />
+								<copy todir="${build.dir}/Adempiere/glassfish">
+									<fileset dir="../glassfishfacet/config" />
+								</copy>
+ 								-->
+
+								<!-- Create Install ZIP -->
+								<!-- 
+								<zip zipfile="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip"
+									basedir="${build.dir}" includes="Adempiere/**" />
+ 								-->
+								<!-- Create Install TAR -->
+								<!-- 
+								<tar longfile="gnu"
+									tarfile="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz"
+									basedir="${build.dir}" includes="Adempiere/**" compression="gzip" />
+								-->
+
+								<!-- Create Checksums -->
+								<!-- 
+								<checksum
+									file="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz" />
+								<concat
+									destfile="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz.MD5"
+									append="yes"> *Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz</concat>
+								-->
+								<!-- Test with md5sum -c Adempiere_251.zip.MD5 -->
+								<!-- 
+								<checksum
+									file="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip" />
+								<concat
+									destfile="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip.MD5"
+									append="yes"> *Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip</concat>
+ 								-->
 							</target>
 						</configuration>
 						<goals>
@@ -152,6 +239,25 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.3</version>
 				<executions>
+					<execution>
+						<id>unpack-install</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>install</artifactId>
+									<type>zip</type>
+									<classifier>files</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
 					<execution>
 						<id>unpack-misc</id>
 						<phase>initialize</phase>
