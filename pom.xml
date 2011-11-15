@@ -85,6 +85,8 @@
 
 		
 		<!-- work in progress (ts) -->
+  		<module>packages/client</module>
+		<module>packages/2pack</module>
 		<module>application-server/jboss</module>
 		<module>misc</module>
 		<module>assembly/adempiere-dist</module>

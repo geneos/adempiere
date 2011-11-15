@@ -315,6 +315,26 @@
 							</artifactItems>
 						</configuration>
 					</execution>
+					<execution>
+						<id>copy-install-jar</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>install</artifactId>
+									<type>jar</type>
+									<classifier>jar-with-dependencies</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/Adempiere/lib</outputDirectory>
+									<destFileName>CInstall.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 

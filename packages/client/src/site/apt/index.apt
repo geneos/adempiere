@@ -1,0 +1,8 @@
+
+What is it?
+
+  This project defines optional packages to be included in the ADempiere client.
+  
+  The dependencies declared here will be used both within the ADempiere web client and Swing client. 
+  
+  

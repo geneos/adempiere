@@ -13,6 +13,7 @@
 	<fileSets>
 		<fileSet>
 			<directory>${project.build.directory}/Adempiere</directory>
+			<outputDirectory></outputDirectory>
 		</fileSet>
 	</fileSets>
 

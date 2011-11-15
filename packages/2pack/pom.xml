@@ -1,0 +1,29 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>ADempiere ERP - Optional 2Pack Packages</name>
+	<artifactId>packages-2pack</artifactId>
+	<packaging>jar</packaging>
+	
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>adempiere</artifactId>
+		<version>3.7.1-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.oslabs</groupId>
+			<artifactId>copyacct</artifactId>
+			<version>0.0.5</version>
+			<classifier>packout</classifier>
+			<type>zip</type>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+	<description>This was formerly the packages folder
+The binary files were uploaded to nexus.adempiere.de</description>
+</project>
