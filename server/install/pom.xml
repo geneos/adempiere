@@ -28,7 +28,7 @@
 			<groupId>org.adempiere</groupId>
 			<artifactId>desktop-client</artifactId>
 			<version>${adempiere.version}</version>
-			<scope>provided</scope>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>

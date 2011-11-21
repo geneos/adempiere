@@ -17,33 +17,33 @@
 	<dependencies>
 
 		<!-- Adempiere -->
-		
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>base</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>desktop-client</artifactId>
-			<version>${adempiere.version}</version>			
+			<version>${adempiere.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>jasperreports-lib</artifactId>
-			<version>${adempiere.version}</version>			
+			<version>${adempiere.version}</version>
 			<scope>runtime</scope>
-		</dependency>							
-				
+		</dependency>
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>server-ejb</artifactId>
 			<version>${adempiere.version}</version>
 			<type>ejb</type>
 		</dependency>
-				
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>root-webapp</artifactId>
@@ -57,28 +57,28 @@
 			<version>${adempiere.version}</version>
 			<type>war</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>webstore-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>webcm-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>zkwebui-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
@@ -89,6 +89,10 @@
 				<version>2.6</version>
 				<configuration>
 					<modules>
+						<jarModule>
+							<groupId>org.adempiere</groupId>
+							<artifactId>base</artifactId>
+						</jarModule>
 						<webModule>
 							<groupId>org.adempiere</groupId>
 							<artifactId>root-webapp</artifactId>
@@ -108,7 +112,7 @@
 							<groupId>org.adempiere</groupId>
 							<artifactId>zkwebui-webapp</artifactId>
 							<contextRoot>/webui</contextRoot>
-						</webModule>						
+						</webModule>
 					</modules>
 				</configuration>
 			</plugin>
