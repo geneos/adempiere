@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>install</artifactId>
+	<artifactId>installer-incl-libs</artifactId>
 	<packaging>jar</packaging>
-	<name>ADempiere ERP - Install</name>
+	<name>ADempiere ERP - Installer with included dependiecies</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>
@@ -17,26 +17,35 @@
 	<dependencies>
 
 		<!-- Adempiere -->
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>install</artifactId>
+			<version>${adempiere.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>base</artifactId>
 			<version>${adempiere.version}</version>
-			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>desktop-client</artifactId>
+			<version>${adempiere.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>jboss-facet</artifactId>
 			<version>${adempiere.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>glassfish-facet</artifactId>
 			<version>${adempiere.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 
 	</dependencies>
@@ -47,9 +56,9 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2.1</version>
 				<configuration>
-					<descriptors>
-						<descriptor>src/main/assembly/install.xml</descriptor>
-					</descriptors>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
 				</configuration>
 				<executions>
 					<execution>

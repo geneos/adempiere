@@ -1,0 +1,9 @@
+
+ADempiere EAR, including all dependencies
+
+  Note: This currently doesn't work properly, at least with JBoss-4. JBoss classloader doesn't find the included 3rd-party libs.
+  This can probably be solved by adding some sort of jboss-xml-descriptor file
+  
+   
+  
+  

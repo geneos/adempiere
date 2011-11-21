@@ -1,0 +1,9 @@
+
+ADempiere EAR, excluding dependencies
+
+  It is assumed that those dependencies are provided at runtime. 
+  Currently this means, that they should go into the application server's lib directory
+  
+   
+  
+  

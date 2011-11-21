@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>adempiere-ear</artifactId>
+	<artifactId>adempiere-ear-excl-libs</artifactId>
 	<packaging>ear</packaging>
-	<name>ADempiere ERP - Adempiere Ear</name>
+	<name>ADempiere ERP - Adempiere Ear without dependencies</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>
@@ -22,6 +22,7 @@
 			<groupId>org.adempiere</groupId>
 			<artifactId>base</artifactId>
 			<version>${adempiere.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -34,7 +35,7 @@
 			<groupId>org.adempiere</groupId>
 			<artifactId>jasperreports-lib</artifactId>
 			<version>${adempiere.version}</version>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
