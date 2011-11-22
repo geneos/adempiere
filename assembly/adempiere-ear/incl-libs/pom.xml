@@ -88,11 +88,8 @@
 				<artifactId>maven-ear-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
+					<includeLibInApplicationXml>true</includeLibInApplicationXml>
 					<modules>
-						<jarModule>
-							<groupId>org.adempiere</groupId>
-							<artifactId>base</artifactId>
-						</jarModule>
 						<webModule>
 							<groupId>org.adempiere</groupId>
 							<artifactId>root-webapp</artifactId>
