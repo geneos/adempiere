@@ -1,0 +1,374 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>adempiere-dist</artifactId>
+	<packaging>pom</packaging>
+	<name>ADempiere ERP - Distributable - JBoss with external libs</name>
+	<url>http://www.adempiere.com/ADempiere_ERP</url>
+
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>adempiere</artifactId>
+		<version>3.7.1-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>adempiere-ear-excl-libs</artifactId>
+			<version>${project.version}</version>
+			<type>ear</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>jboss</artifactId>
+			<version>${project.version}</version>
+			<classifier>zip</classifier>
+			<type>zip</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>misc</artifactId>
+			<version>${project.version}</version>
+			<classifier>zip</classifier>
+			<type>zip</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>install</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>base</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<configuration>
+							<target>
+
+								<property name="build.dir" value="${project.build.directory}" />
+								<property name="src.dir"
+									value="${project.build.directory}/install/Adempiere" />
+								<property name="utils.dir" value="${project.build.directory}/misc/utils" />
+								<property name="launch.dir"
+									value="${project.build.directory}/misc/launch4J" />
+								<property name="lib.dir" value="${project.build.directory}/misc/lib" />
+								<property name="dbStartup.dir"
+									value="${project.build.directory}/misc/db/database/Startup" />
+								<property name="data.dir" value="${project.build.directory}/misc/data" />
+								
+								<!-- from /adempiere/install/build.xml target=installDistribution -->
+								<mkdir dir="${build.dir}" />
+								<mkdir dir="${build.dir}/Adempiere" />
+								<mkdir dir="${build.dir}/Adempiere/images" />
+								<mkdir dir="${build.dir}/Adempiere/packages" />
+								<mkdir dir="${build.dir}/Adempiere/zkpackages" />
+
+								<mkdir dir="${build.dir}/Adempiere/packages/liberoMFG" />
+								<mkdir dir="${build.dir}/Adempiere/packages/liberoMFG/lib" />
+								<!-- 
+									TODO: Download dependencies from nexus 
+								<copy file="../packages/liberoMFG.jar"
+									tofile="${build.dir}/Adempiere/packages/liberoMFG/lib/liberoMFG.jar" />
+
+								<mkdir dir="${build.dir}/Adempiere/zkpackages/liberoMFG" />
+								<mkdir dir="${build.dir}/Adempiere/zkpackages/liberoMFG/lib" />
+								<copy file="../zkpackages/liberozkMFG.jar"
+									tofile="${build.dir}/Adempiere/zkpackages/liberoMFG/lib/liberozkMFG.jar" />
+
+								<mkdir dir="${build.dir}/Adempiere/packages/liberoHR" />
+								<mkdir dir="${build.dir}/Adempiere/packages/liberoHR/lib" />
+								<copy file="../packages/liberoHR.jar"
+									tofile="${build.dir}/Adempiere/packages/liberoHR/lib/liberoHR.jar" />
+								-->
+								<copy file="${lib.dir}/CheckConflicts.sh" tofile="${build.dir}/Adempiere/lib/CheckConflicts.sh" />
+
+								<!-- Base Directory -->
+								<copy todir="${build.dir}/Adempiere">
+									<fileset dir="${src.dir}" />
+								</copy>
+								<copy todir="${build.dir}/Adempiere/images">
+									<fileset dir="${src.dir}/images" />
+								</copy>
+								<copy file="${utils.dir}/RUN_Adempiere.bat" todir="${build.dir}/Adempiere/" />
+								<copy file="${utils.dir}/RUN_Adempiere.sh" todir="${build.dir}/Adempiere/" />
+
+
+								<!-- Lib Directory -->
+								<mkdir dir="${build.dir}/Adempiere/lib" />
+								<copy file="${launch.dir}/Adempiere.ico" tofile="${build.dir}/Adempiere/lib/Adempiere.ico" />
+								<!-- copy file="${launch.dir}/jlaunchs.ico" tofile="${build.dir}/Adempiere/lib/Adempieres.ico"/ -->
+								<copy todir="${build.dir}/Adempiere/lib">
+									<fileset dir="${lib.dir}">
+										<include name="**/*ar" />
+										<include name="**/*xml" />
+										<include name="**/*0" />
+									</fileset>
+								</copy>
+								<copy file="${launch.dir}/Release/Adempiere.exe" todir="${build.dir}/Adempiere/lib" />
+								<!-- 
+									TODO
+								<copy file="CInstall.jar" todir="${build.dir}/Adempiere/lib" />
+								<copy file="../sqlj/sqlj.jar" todir="${build.dir}/Adempiere/lib" />
+								<copy file="../JasperReports/CompiereJasperReqs.jar" todir="${build.dir}/Adempiere/lib" />
+								<concat destfile="${build.dir}/Adempiere/lib/index.html">AdempiereHome</concat>
+								-->
+
+								<!-- Utils Directory -->
+								<mkdir dir="${build.dir}/Adempiere/utils" />
+								<copy todir="${build.dir}/Adempiere/utils">
+									<fileset dir="${utils.dir}" excludes="**/pg/**,.project" />
+								</copy>
+								<copy todir="${build.dir}/Adempiere/utils/oracle">
+									<fileset dir="${dbStartup.dir}/oracle" includes="*.sql" />
+								</copy>
+								<copy todir="${build.dir}/Adempiere/utils/postgresql">
+									<fileset dir="${dbStartup.dir}/postgresql" includes="*.sql" />
+								</copy>
+								<copy todir="${build.dir}/Adempiere/utils/oracleXE">
+									<fileset dir="${dbStartup.dir}/oracleXE" includes="*.sql" />
+								</copy>
+
+
+								<!-- Data Directory -->
+								<mkdir dir="${build.dir}/Adempiere/data" />
+								<unjar src="${data.dir}/seed/Adempiere.jar" dest="${build.dir}/Adempiere/data" />
+								<unjar src="${data.dir}/seed/Adempiere_pg.jar" dest="${build.dir}/Adempiere/data" />
+								<!--unjar src="${data.dir}/seed/Adempiere_mysql.jar" dest="${build.dir}/Adempiere/data"/ -->
+								<mkdir dir="${build.dir}/Adempiere/data/import" />
+								<copy todir="${build.dir}/Adempiere/data/import">
+									<fileset dir="${data.dir}/import">
+										<include name="**/Accounting*.*" />
+										<include name="Example*.csv" />
+									</fileset>
+								</copy>
+								<copy todir="${build.dir}/Adempiere/data/">
+									<fileset dir="${data.dir}/seed/">
+										<include name="**/*.jar" />
+									</fileset>
+								</copy>
+
+
+								<!-- JBoss Directory -->
+								<!-- 
+								<mkdir dir="${build.dir}/Adempiere/jboss" />
+								<mkdir dir="${build.dir}/Adempiere/jboss/bin" />
+								<copy todir="${build.dir}/Adempiere/jboss/bin">
+									<fileset dir="${jboss.dir}/bin" excludes="**/CVS/**" />
+								</copy>
+								<mkdir dir="${build.dir}/Adempiere/jboss/lib" />
+								<copy todir="${build.dir}/Adempiere/jboss/lib">
+									<fileset dir="${jboss.dir}/lib" excludes="**/CVS/**" />
+								</copy>
+								<mkdir dir="${build.dir}/Adempiere/jboss/server" />
+								<copy todir="${build.dir}/Adempiere/jboss/server">
+									<fileset dir="${jboss.dir}/server" excludes="**/CVS/**" />
+								</copy>
+ 								-->
+ 								
+								<!-- GlassFish -->
+								<!-- 
+								<mkdir dir="${build.dir}/Adempiere/glassfish" />
+								<copy todir="${build.dir}/Adempiere/glassfish">
+									<fileset dir="../glassfishfacet/config" />
+								</copy>
+ 								-->
+
+								<!-- Create Install ZIP -->
+								<!-- 
+								<zip zipfile="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip"
+									basedir="${build.dir}" includes="Adempiere/**" />
+ 								-->
+								<!-- Create Install TAR -->
+								<!-- 
+								<tar longfile="gnu"
+									tarfile="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz"
+									basedir="${build.dir}" includes="Adempiere/**" compression="gzip" />
+								-->
+
+								<!-- Create Checksums -->
+								<!-- 
+								<checksum
+									file="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz" />
+								<concat
+									destfile="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz.MD5"
+									append="yes"> *Adempiere_${env.ADEMPIERE_VERSION_FILE}.tar.gz</concat>
+								-->
+								<!-- Test with md5sum -c Adempiere_251.zip.MD5 -->
+								<!-- 
+								<checksum
+									file="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip" />
+								<concat
+									destfile="${build.dir}/Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip.MD5"
+									append="yes"> *Adempiere_${env.ADEMPIERE_VERSION_FILE}.zip</concat>
+ 								-->
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>unpack-install</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>install-excl-libs</artifactId>
+									<type>zip</type>
+									<classifier>files</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-misc</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>misc</artifactId>
+									<type>zip</type>
+									<classifier>zip</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/misc</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-jboss</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>jboss</artifactId>
+									<type>zip</type>
+									<classifier>zip</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/Adempiere</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-adempiere-base</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>base</artifactId>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/Adempiere/jboss/server/adempiere/lib/</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-adempiere-ear</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>adempiere-ear-excl-libs</artifactId>
+									<type>ear</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/Adempiere/jboss/server/adempiere/deploy/</outputDirectory>
+									<destFileName>adempiere.ear</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-install-jar</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>installer-excl-libs</artifactId>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/Adempiere/lib</outputDirectory>
+									<destFileName>CInstall.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/adempiere.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

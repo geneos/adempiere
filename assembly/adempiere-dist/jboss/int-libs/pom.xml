@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>adempiere-dist</artifactId>
 	<packaging>pom</packaging>
-	<name>ADempiere ERP - Distributable</name>
+	<name>ADempiere ERP - Distributable - JBoss without external libs</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>
@@ -49,17 +49,6 @@
 
 	<build>
 		<plugins>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-resources-plugin</artifactId> 
-				<version>2.5</version> <configuration> <outputDirectory>${project.build.directory}/Adempiere</outputDirectory> 
-				<resources> <resource> <directory>${basedir}/utils</directory> </resource> 
-				</resources> </configuration> <executions> <execution> <id>copy-stuff</id> 
-				<phase>package</phase> <goals> <goal>copy-resources</goal> </goals> </execution> 
-				</executions> </plugin> -->
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> 
-				<version>2.2.1</version> <configuration> <descriptors> <descriptor>src/main/assembly/jboss-zip.xml</descriptor> 
-				</descriptors> </configuration> <executions> <execution> <id>make-assembly</id> 
-				<phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
-				</executions> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -325,7 +314,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.adempiere</groupId>
-									<artifactId>install</artifactId>
+									<artifactId>install-incl-libs</artifactId>
 									<type>jar</type>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
@@ -359,4 +348,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	<description>This distributable contains a jboss that has no adempiere-libs in its libs folder. This means that all ears and wars need to bring their own dependendencies</description>
 </project>
