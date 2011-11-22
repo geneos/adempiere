@@ -41,8 +41,16 @@
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
+			<artifactId>installer-incl-libs</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
 			<artifactId>install</artifactId>
 			<version>${project.version}</version>
+			<classifier>files</classifier>
+			<type>zip</type>
 		</dependency>
 
 	</dependencies>
@@ -314,7 +322,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.adempiere</groupId>
-									<artifactId>install-incl-libs</artifactId>
+									<artifactId>installer-incl-libs</artifactId>
 									<type>jar</type>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
