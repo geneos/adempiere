@@ -81,7 +81,7 @@
 		<module>assembly/webcm-ear</module>
 		<module>assembly/webstore-ear</module>
 		<module>assembly/jasperreports-ear</module>
-		<module>assembly/adempiere-ear</module>
+		<module>assembly/adempiere-ear/incl-libs</module>
 
 		
 		<!-- work in progress (ts) -->
@@ -89,7 +89,8 @@
 		<module>packages/2pack</module>
 		<module>application-server/jboss</module>
 		<module>misc</module>
-		<module>assembly/adempiere-dist</module>
+		<module>assembly/adempiere-dist/jboss/int-libs</module>
+
 
 	</modules>
 
