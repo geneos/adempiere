@@ -18,7 +18,7 @@
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>adempiere-ear</artifactId>
+			<artifactId>adempiere-ear-incl-libs</artifactId>
 			<version>${project.version}</version>
 			<type>ear</type>
 		</dependency>
@@ -66,7 +66,6 @@
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
-
 								<property name="build.dir" value="${project.build.directory}" />
 								<property name="src.dir"
 									value="${project.build.directory}/install/Adempiere" />
@@ -303,7 +302,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.adempiere</groupId>
-									<artifactId>adempiere-ear</artifactId>
+									<artifactId>adempiere-ear-incl-libs</artifactId>
 									<type>ear</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/Adempiere/jboss/server/adempiere/deploy/</outputDirectory>
