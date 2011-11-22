@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>installer-excl-libs</artifactId>
 	<packaging>jar</packaging>
-	<name>ADempiere ERP -  Installer without included dependencies</name>
+	<name>ADempiere ERP - Installer without included dependencies</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>

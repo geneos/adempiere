@@ -76,6 +76,9 @@
 		<module>web-client/zkwebui-lib</module>
 		<module>web-client/zkwebui-webapp</module>
 
+		<!-- Misc files and directories (no java code) -->
+		<module>misc</module>
+
 		<!-- Assemblies -->
 
 		<module>assembly/webcm-ear</module>
@@ -83,14 +86,15 @@
 		<module>assembly/jasperreports-ear</module>
 		<module>assembly/adempiere-ear/incl-libs</module>
 
+
 		
 		<!-- work in progress (ts) -->
   		<module>packages/client</module>
 		<module>packages/2pack</module>
 		<module>application-server/jboss</module>
-		<module>misc</module>
+		
+		<module>assembly/adempiere-installer/incl-libs</module>
 		<module>assembly/adempiere-dist/jboss/int-libs</module>
-
 
 	</modules>
 

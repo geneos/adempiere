@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>installer-incl-libs</artifactId>
 	<packaging>jar</packaging>
-	<name>ADempiere ERP - Installer with included dependiecies</name>
+	<name>ADempiere ERP - Installer with included dependencies</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>
