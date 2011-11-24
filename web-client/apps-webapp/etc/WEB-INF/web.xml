@@ -46,11 +46,6 @@
     <servlet-class>org.compiere.www.WZoom</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>WCounter</servlet-name>
-    <servlet-class>org.compiere.wstore.WCounter</servlet-class>
-    <load-on-startup>15</load-on-startup>
-  </servlet>
-  <servlet>
     <servlet-name>WFieldUpdate</servlet-name>
     <servlet-class>org.compiere.www.WFieldUpdate</servlet-class>
   </servlet>
@@ -132,10 +127,6 @@
   <servlet-mapping>
     <servlet-name>WZoom</servlet-name>
     <url-pattern>/WZoom</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>WCounter</servlet-name>
-    <url-pattern>/WCounter</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>WFieldUpdate</servlet-name>
