@@ -1,0 +1,5 @@
+   
+   The root webapp contains
+   *The "main" html page (admepiere.html)
+   *the JNLP client
+   *webroot, i.e. the Servlets that do Server-Monitor, Status-Info and so on

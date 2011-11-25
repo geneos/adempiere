@@ -29,7 +29,11 @@
 			<groupId>org.adempiere</groupId>
 			<artifactId>server-lib</artifactId>
 			<version>${adempiere.version}</version>
+			<!-- working on 
+			java.lang.NoClassDefFoundError: org/compiere/server/AdempiereServerMgr
+				at org.compiere.web.AdempiereMonitor.init(AdempiereMonitor.java:883) 
 			<scope>provided</scope>
+			 -->
 		</dependency>
 
 		<!-- J2EE -->

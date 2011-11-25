@@ -32,15 +32,6 @@
 		<servlet-name>WAccount</servlet-name>
 		<servlet-class>org.compiere.www.WAccount</servlet-class>
 	</servlet>
-	<!-- teo_sarca: turning this off because the class is from other jar and would not be found on startup
-			and more, is doing nothing anyway, just logging the referrer url to console
-	<servlet>
-		<display-name>Adempiere Counter</display-name>
-		<servlet-name>WCounter</servlet-name>
-		<servlet-class>org.compiere.wstore.Counter</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	-->
 	<servlet>
 		<display-name>Adempiere Field Update</display-name>
 		<servlet-name>WFieldUpdate</servlet-name>
@@ -151,10 +142,6 @@
 	<servlet-mapping>
 		<servlet-name>WAccount</servlet-name>
 		<url-pattern>/WAccount</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>WCounter</servlet-name>
-		<url-pattern>/WCounter</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>WFieldUpdate</servlet-name>
