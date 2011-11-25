@@ -8,6 +8,9 @@
 	<name>ADempiere ERP</name>
 	<version>3.7.1-SNAPSHOT</version>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
+	<organization>
+		<name>ADempiere</name>
+	</organization>
 
 	<distributionManagement>
 		<!-- Note about port 8081: When using port 80, the deploy fails with http 
