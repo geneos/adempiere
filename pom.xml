@@ -62,13 +62,12 @@
 		<module>server/install</module>
 
 		<!-- Desktop Client -->
-
 		<module>desktop-client/client</module>
-		<module>desktop-client/client-jnlp</module>
 
 		<!-- Web Client -->
 
 		<module>web-client/root-lib</module>
+		<module>desktop-client/client-jnlp</module>
 		<module>web-client/root-webapp</module>
 		<module>web-client/apps-lib</module>
 		<module>web-client/apps-webapp</module>
