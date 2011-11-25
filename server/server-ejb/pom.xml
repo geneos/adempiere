@@ -46,7 +46,6 @@
 					<ejbVersion>3.0</ejbVersion>
 					<archive>
 						<manifestEntries>
-							<Class-Path>Adempiere.jar AdempiereSLib.jar adempiereApps.jar</Class-Path>
 						</manifestEntries>						
 					</archive>
 				</configuration>

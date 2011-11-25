@@ -29,6 +29,16 @@
 			<groupId>org.adempiere</groupId>
 			<artifactId>desktop-client</artifactId>
 			<version>${adempiere.version}</version>
+			<exclusions>
+				<!-- 
+				jbossall-client is required in the swing client (to connect to jboss)
+				but not within this ear 
+				-->
+				<exclusion>
+					<groupId>org.jboss.client</groupId>
+					<artifactId>jbossall-client</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

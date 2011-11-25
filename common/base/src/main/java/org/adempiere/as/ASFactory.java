@@ -44,6 +44,9 @@ public class ASFactory {
 				applicationServer = server;
 				break;
 			} catch (Throwable t) {
+				//TODO: this is debug output. remove or comment out
+				System.out.println("Throwable " + t.toString() + " with message:" + t.getMessage());
+				t.printStackTrace(System.out);
 			}
 		}
 		if (applicationServer == null) {

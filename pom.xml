@@ -79,8 +79,10 @@
 		<module>web-client/zkwebui-webapp</module>
 
 		<!-- Misc files and directories (no java code) -->
+		<!-- 
 		<module>misc</module>
-
+ -->
+ 
 		<!-- Assemblies -->
 
 		<module>assembly/webcm-ear</module>
@@ -93,8 +95,9 @@
 		<!-- work in progress (ts) -->
   		<module>packages/client</module>
 		<module>packages/2pack</module>
+		<!-- 
 		<module>application-server/jboss</module>
-		
+		 -->
 		<module>assembly/adempiere-installer/incl-libs</module>
 		<module>assembly/adempiere-dist/jboss/int-libs</module>
 

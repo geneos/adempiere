@@ -30,6 +30,9 @@ public class JBoss implements IApplicationServer {
 		try {
 			Class.forName("org.jboss.security.jndi.JndiLoginInitialContextFactory");
 		} catch (ClassNotFoundException e) {
+			//TODO: this is debug output. remove or comment out
+			System.out.println("ClassNotFoundException:" + e.getMessage());
+			e.printStackTrace(System.out);
 			throw new IllegalStateException(e);
 		}
 	}

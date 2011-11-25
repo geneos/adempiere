@@ -24,14 +24,15 @@
 			<artifactId>desktop-client</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>jasperreports-lib</artifactId>
-			<version>${adempiere.version}</version>						
-		</dependency>		
+			<version>${adempiere.version}</version>
+		</dependency>
+
 	</dependencies>
-	
+
 	<build>
 	 <!-- To define the plugin version in your parent POM -->
 		<pluginManagement>
@@ -49,6 +50,7 @@
 				<artifactId>keytool-maven-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>create_keystore</id>
 						<goals>
 							<goal>genkey</goal>
 						</goals>
@@ -60,12 +62,12 @@
 					<dname>cn=www.adempiere.com, ou=ADempiere, L=Everywhere, ST=-, o=ADempiere, c=NoCountry</dname>
 					<keypass>dummy_password</keypass>
 					<storepass>dummy_password</storepass>
+					<validity>3650</validity>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo.webstart</groupId>
 				<artifactId>webstart-maven-plugin</artifactId>
-				<version>1.0-beta-2</version>
 				<executions>
 					<execution>
 						<id>create_jnlp_zip</id>
