@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>adempiere-dist</artifactId>
+	<artifactId>adempiere-dist-jboss</artifactId>
 	<packaging>pom</packaging>
-	<name>ADempiere ERP - Distributable - JBoss with external libs</name>
+	<name>ADempiere ERP - Distributable - JBoss without external libs</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>
@@ -18,7 +18,7 @@
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>adempiere-ear-excl-libs</artifactId>
+			<artifactId>adempiere-ear-incl-libs</artifactId>
 			<version>${project.version}</version>
 			<type>ear</type>
 		</dependency>
@@ -41,14 +41,16 @@
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>install</artifactId>
+			<artifactId>installer-incl-libs</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>base</artifactId>
+			<artifactId>install</artifactId>
 			<version>${project.version}</version>
+			<classifier>files</classifier>
+			<type>zip</type>
 		</dependency>
 
 	</dependencies>
@@ -64,7 +66,6 @@
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
-
 								<property name="build.dir" value="${project.build.directory}" />
 								<property name="src.dir"
 									value="${project.build.directory}/install/Adempiere" />
@@ -244,7 +245,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.adempiere</groupId>
-									<artifactId>install-excl-libs</artifactId>
+									<artifactId>install</artifactId>
 									<type>zip</type>
 									<classifier>files</classifier>
 									<overWrite>true</overWrite>
@@ -292,24 +293,6 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>copy-adempiere-base</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.adempiere</groupId>
-									<artifactId>base</artifactId>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/Adempiere/jboss/server/adempiere/lib/</outputDirectory>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-					<execution>
 						<id>copy-adempiere-ear</id>
 						<phase>prepare-package</phase>
 						<goals>
@@ -319,7 +302,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.adempiere</groupId>
-									<artifactId>adempiere-ear-excl-libs</artifactId>
+									<artifactId>adempiere-ear-incl-libs</artifactId>
 									<type>ear</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/Adempiere/jboss/server/adempiere/deploy/</outputDirectory>
@@ -338,8 +321,9 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.adempiere</groupId>
-									<artifactId>installer-excl-libs</artifactId>
+									<artifactId>installer-incl-libs</artifactId>
 									<type>jar</type>
+									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/Adempiere/lib</outputDirectory>
 									<destFileName>CInstall.jar</destFileName>
@@ -371,4 +355,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	<description>This distributable contains a JBoss-4.2.3.GA with the standard ADempiere Application</description>
 </project>

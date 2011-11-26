@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>desktop-client-jnlp</artifactId>
 	<packaging>jar</packaging>
-	<name>ADempiere ERP - Desktop Client JNLP Bundle</name>
-	<description>ADempiere desktop-client as a zipped JNLP application</description>
+	<name>ADempiere ERP - Desktop Client WebStart</name>
+	<description>ADempiere desktop-client, zipped as as WebStart (JNLP) application</description>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>

@@ -99,7 +99,7 @@
 		<module>application-server/jboss</module>
 		 -->
 		<module>assembly/adempiere-installer/incl-libs</module>
-		<module>assembly/adempiere-dist/jboss/int-libs</module>
+		<module>assembly/adempiere-dist/jboss</module>
 
 	</modules>
 
