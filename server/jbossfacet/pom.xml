@@ -24,23 +24,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- 
-			jbosssx-client and jnp-client are required within the 
-			adempiere swing client when connecting to the server via jndi.
-			The classes are also part of jbossall-client, however jbossall-client 
-			causes a lot of trouble on server startup 
-		 -->
+
+
 		<dependency>
-			<groupId>jboss</groupId>
-			<artifactId>jbosssx-client</artifactId>
+			<groupId>org.jboss.client</groupId>
+			<artifactId>jbossall-client</artifactId>
 			<version>4.2.3.GA</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>jboss</groupId>
-			<artifactId>jnp-client</artifactId>
-			<version>4.2.3.GA</version>
-		</dependency>
-		
 	</dependencies>
 </project>

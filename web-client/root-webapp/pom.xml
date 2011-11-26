@@ -23,14 +23,20 @@
 		</dependency>
 
 		<!-- JNLP -->
-
+<!-- 
+VERY IMPORTANT:
+*Don't add desktop-client-jnlp as a dependency here. 
+ It would cause all the swing client lib to end up in WEB-INF lib and bloating it wihout need. 
+ As also jnp-client.jar would be part of the libs, the deployment of this war would fail with
+ an "IncompatibleClassChangeError".
+*desktop-client-jnlp is handled directly in the build section.
 		<dependency>
 			<groupId>org.adempiere</groupId>
 			<artifactId>desktop-client-jnlp</artifactId>
-			<version>3.7.1-SNAPSHOT</version>
+			<version>${adempiere.version}</version>
 			<type>zip</type>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>org.adempiere.jnlp</groupId>
 			<artifactId>jardiff</artifactId>
