@@ -80,7 +80,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<verbose>false</verbose>
+					<!--  verbose>true</verbose -->
 					<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
 					<sign>
 						<keystore>${basedir}/src/main/keystore/keystore</keystore>

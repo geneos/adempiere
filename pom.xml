@@ -78,10 +78,13 @@
 		<module>web-client/zkwebui-lib</module>
 		<module>web-client/zkwebui-webapp</module>
 
-		<!-- Misc files and directories (no java code) -->
-		<!-- 
+		<!-- packages -->
+  		<module>packages/client</module>
+		<module>packages/2pack</module>
+		
+		<!-- Misc files and directories -->
 		<module>misc</module>
- -->
+		<module>application-server/jboss</module>
  
 		<!-- Assemblies -->
 
@@ -89,15 +92,6 @@
 		<module>assembly/webstore-ear</module>
 		<module>assembly/jasperreports-ear</module>
 		<module>assembly/adempiere-ear/incl-libs</module>
-
-
-		
-		<!-- work in progress (ts) -->
-  		<module>packages/client</module>
-		<module>packages/2pack</module>
-		<!-- 
-		<module>application-server/jboss</module>
-		 -->
 		<module>assembly/adempiere-installer/incl-libs</module>
 		<module>assembly/adempiere-dist/jboss</module>
 
