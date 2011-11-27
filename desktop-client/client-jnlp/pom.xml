@@ -45,6 +45,7 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+		 <!-- 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>keytool-maven-plugin</artifactId>
@@ -57,7 +58,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<keystore>${basedir}/target/keystore</keystore>
+					<keystore>${basedir}/src/main/keystore/keystore</keystore>
 					<alias>adempiere</alias>
 					<dname>cn=www.adempiere.com, ou=ADempiere, L=Everywhere, ST=-, o=ADempiere, c=NoCountry</dname>
 					<keypass>dummy_password</keypass>
@@ -65,6 +66,7 @@
 					<validity>3650</validity>
 				</configuration>
 			</plugin>
+		 -->
 			<plugin>
 				<groupId>org.codehaus.mojo.webstart</groupId>
 				<artifactId>webstart-maven-plugin</artifactId>
@@ -81,7 +83,7 @@
 					<verbose>false</verbose>
 					<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
 					<sign>
-						<keystore>${basedir}/target/keystore</keystore>
+						<keystore>${basedir}/src/main/keystore/keystore</keystore>
 						<keypass>dummy_password</keypass>
 						<storepass>dummy_password</storepass>
 						<storetype>jks</storetype>
