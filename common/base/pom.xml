@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>org.adempiere</groupId>
 		<artifactId>adempiere</artifactId>
-		<version>3.7.1-SNAPSHOT</version>
+		<version>3.7.0-FR3403603-SNAPSHOT</version>
 		<relativePath>../..</relativePath>
 	</parent>
 
@@ -217,7 +217,7 @@
 			<version>3.5-FINAL</version>
 			<exclusions>
 				<!-- working on 
-				..root-webapp-3.7.1-SNAPSHOT-exp.war\WEB-INF\lib\servlet-api-2.3.jar) - jar not loaded. See Servlet Spec 2.3, section 9.7.2. Offending class: javax/servlet/Servlet.class
+				..root-webapp-3.7.0-FR3403603-SNAPSHOT-exp.war\WEB-INF\lib\servlet-api-2.3.jar) - jar not loaded. See Servlet Spec 2.3, section 9.7.2. Offending class: javax/servlet/Servlet.class
 				 -->
 				<exclusion>
 					<groupId>javax.servlet</groupId>
