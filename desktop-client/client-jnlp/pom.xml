@@ -82,6 +82,7 @@
 				<configuration>
 					<!--  verbose>true</verbose -->
 					<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
+					<pack200>true</pack200>
 					<sign>
 						<keystore>${basedir}/src/main/keystore/keystore</keystore>
 						<keypass>dummy_password</keypass>
