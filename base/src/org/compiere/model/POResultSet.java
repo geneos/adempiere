@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.adempiere.exceptions.DBException;
+import org.adempiere.model.POWrapper;
 import org.compiere.util.DB;
 
 /**
@@ -34,11 +35,12 @@ import org.compiere.util.DB;
  * 			<li>FR [ 1984834 ] Add POResultSet.hasNext convenient method
  * 			<li>FR [ 1985134 ] POResultSet improvements
  */
-public class POResultSet<T extends PO> {
-
+public class POResultSet<T>
+{
 	private String trxName;
 	private ResultSet resultSet;
 	private MTable table;
+	private Class<T> clazz;
 	private PreparedStatement statement;
 	/** Current fetched PO */
 	private T currentPO = null;
@@ -53,8 +55,9 @@ public class POResultSet<T extends PO> {
 	 * @param rs
 	 * @param trxName
 	 */
-	public POResultSet(MTable table, PreparedStatement ps, ResultSet rs, String trxName) {
+	public POResultSet(MTable table, Class<T> clazz, PreparedStatement ps, ResultSet rs, String trxName) {
 		this.table = table;
+		this.clazz = clazz;
 		this.statement = ps;
 		this.resultSet = rs;
 		this.trxName = trxName;
@@ -78,6 +81,7 @@ public class POResultSet<T extends PO> {
 	 * @return PO or null if reach the end of resultset
 	 * @throws DBException
 	 */
+	@SuppressWarnings("unchecked")
 	public T next() throws DBException {
 		if (currentPO != null) {
 			T po = currentPO;
@@ -85,9 +89,16 @@ public class POResultSet<T extends PO> {
 			return po;
 		}
 		try {
-			if ( resultSet.next() ) {
-				return (T) table.getPO(resultSet, trxName);
-			} else {
+			if ( resultSet.next() )
+			{
+				PO o = table.getPO(resultSet, trxName);
+				if (clazz != null && !o.getClass().isAssignableFrom(clazz))
+					return POWrapper.create(o, clazz);
+				else
+					return (T)o;
+			}
+			else
+			{
 				this.close(); // close it if there is no more data to read
 				return null;
 			}

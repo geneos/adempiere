@@ -548,7 +548,17 @@ public abstract class PO
 	 */
 	public int get_ValueOldAsInt (String columnName)
 	{
-		Object value = get_ValueOld(columnName);
+		int index = get_ColumnIndex(columnName);
+		if (index < 0)
+		{
+			log.log(Level.WARNING, "Column not found - " + columnName);
+			return 0;
+		}
+		return get_ValueOldAsInt (index);
+	}   //  get_ValueOldAsInt
+	public int get_ValueOldAsInt (int index)
+	{
+		Object value = get_ValueOld(index);
 		if (value == null)
 			return 0;
 		if (value instanceof Integer)
@@ -559,10 +569,10 @@ public abstract class PO
 		}
 		catch (NumberFormatException ex)
 		{
-			log.warning(columnName + " - " + ex.getMessage());
+			log.warning(get_ColumnName(index) + " - " + ex.getMessage());
 			return 0;
 		}
-	}   //  get_ValueOldAsInt
+	}
 
 	/**
 	 *  Is Value Changed

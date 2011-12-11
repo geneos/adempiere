@@ -31,6 +31,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 import org.adempiere.exceptions.DBException;
+import org.adempiere.exceptions.DBMoreThenOneRecordsFoundException;
+import org.adempiere.model.POWrapper;
 import org.compiere.util.CLogMgt;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
@@ -220,8 +222,18 @@ public class Query
 	 * @return List
 	 * @throws DBException 
 	 */
-	@SuppressWarnings("unchecked")
 	public <T extends PO> List<T> list() throws DBException
+	{
+		return list(null);
+	}
+	/**
+	 * Return a list of all po that match the query criteria.
+	 * @param clazz all resulting POs will be converted to this interface
+	 * @return List
+	 * @throws DBException 
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> List<T> list(Class<T> clazz) throws DBException
 	{
 		List<T> list = new ArrayList<T>();
 		String sql = buildSQL(null, true);
@@ -234,7 +246,13 @@ public class Query
 			rs = createResultSet(pstmt);
 			while (rs.next ())
 			{
-				T po = (T)table.getPO(rs, trxName);
+				PO o = table.getPO(rs, trxName);
+				T po;
+				if (clazz != null && !o.getClass().isAssignableFrom(clazz))
+					po = POWrapper.create(o, clazz);
+				else
+					po = (T)o;
+					
 				list.add(po);
 			}
 		}
@@ -257,6 +275,12 @@ public class Query
 	@SuppressWarnings("unchecked")
 	public <T extends PO> T first() throws DBException
 	{
+		return (T)first(null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T first(Class<T> clazz) throws DBException
+	{
 		T po = null;
 		String sql = buildSQL(null, true);
 		
@@ -268,7 +292,11 @@ public class Query
 			rs = createResultSet(pstmt);
 			if (rs.next ())
 			{
-				po = (T)table.getPO(rs, trxName);
+				PO o = table.getPO(rs, trxName);
+				if (clazz != null && !o.getClass().isAssignableFrom(clazz))
+					po = POWrapper.create(o, clazz);
+				else
+					po = (T)o;
 			}
 		}
 		catch (SQLException e)
@@ -292,6 +320,18 @@ public class Query
 	@SuppressWarnings("unchecked")
 	public <T extends PO> T firstOnly() throws DBException
 	{
+		return (T)firstOnly(null);
+	}
+	/**
+	 * Return first PO that match query criteria.
+	 * If there are more records that match criteria an exception will be throwed 
+	 * @return first PO
+	 * @throws DBException
+	 * @see {@link #first()}
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T firstOnly(Class<T> clazz) throws DBException
+	{
 		T po = null;
 		String sql = buildSQL(null, true);
 		
@@ -303,11 +343,15 @@ public class Query
 			rs = createResultSet(pstmt);
 			if (rs.next())
 			{
-				po = (T)table.getPO(rs, trxName);
+				PO o = table.getPO(rs, trxName);
+				if (clazz != null && !o.getClass().isAssignableFrom(clazz))
+					po = POWrapper.create(o, clazz);
+				else
+					po = (T)o;
 			}
 			if (rs.next())
 			{
-				throw new DBException("QueryMoreThanOneRecordsFound"); // TODO : translate
+				throw new DBMoreThenOneRecordsFoundException();
 			}
 		}
 		catch (SQLException e)
@@ -557,6 +601,10 @@ public class Query
 	 */
 	public <T extends PO> Iterator<T> iterate() throws DBException
 	{
+		return (Iterator<T>)iterate((Class<T>)null);
+	}
+	public <T> Iterator<T> iterate(Class<T> clazz) throws DBException
+	{
 		String[] keys = table.getKeyColumns();
 		StringBuffer sqlBuffer = new StringBuffer(" SELECT ");
 		for (int i = 0; i < keys.length; i++) {
@@ -591,7 +639,7 @@ public class Query
 			DB.close(rs, pstmt);
 			rs = null; pstmt = null;
 		}
-		return new POIterator<T>(table, idList, trxName);
+		return new POIterator<T>(table, clazz, idList, trxName);
 	}
 	
 	/**
@@ -602,6 +650,10 @@ public class Query
 	 */
 	public <T extends PO> POResultSet<T> scroll() throws DBException
 	{
+		return (POResultSet<T>)scroll((Class<T>)null);
+	}
+	public <T> POResultSet<T> scroll(Class<T> clazz) throws DBException
+	{
 		String sql = buildSQL(null, true);
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -610,7 +662,7 @@ public class Query
 		{
 			pstmt = DB.prepareStatement (sql, trxName);
 			rs = createResultSet(pstmt);
-			rsPO = new POResultSet<T>(table, pstmt, rs, trxName);
+			rsPO = new POResultSet<T>(table, clazz, pstmt, rs, trxName);
 			rsPO.setCloseOnError(true);
 			return rsPO;
 		}
