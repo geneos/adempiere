@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>root-webfiles</artifactId>
+	<packaging>war</packaging>
+	<name>ADempiere ERP - Root web files</name>
+	<url>http://www.adempiere.com/ADempiere_ERP</url>
+
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>adempiere</artifactId>
+		<version>3.7.0-FR3403603-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+
+	<dependencies>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>adempiereRootWebfiles</finalName>
+	</build>
+	<description>Contains the adempiere root webapp files *without libraries*.
+
+Important: The artifact created from this module is not functional! The functional web appliction is created in the assembly/adempiere-root module. This allows a customizer to assemble their own adempiereRoot with  customized client libs.</description>
+</project>

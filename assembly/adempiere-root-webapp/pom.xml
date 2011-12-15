@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>root-webapp</artifactId>
+	<artifactId>adempiere-root-webapp</artifactId>
 	<packaging>war</packaging>
 	<name>ADempiere ERP - Root War</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
@@ -54,6 +54,7 @@ VERY IMPORTANT:
 	<build>
 		<plugins>
 
+			<!-- Extract the zipped jnlp client into the 'webstart' directory -->
 			<plugin>
 				<!-- Taken from http://mojo.codehaus.org/webstart/webstart-maven-plugin/examples/war_bundle_1.html#single_webstart_app.html -->
 				<groupId>org.apache.maven.plugins</groupId>
@@ -63,36 +64,56 @@ VERY IMPORTANT:
 					<execution>
 						<!-- Copy the webstart bundle in as a resource before packaging starts. -->
 						<phase>process-resources</phase>
+						<id>unpack_client-jnlp</id>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>desktop-client-jnlp</artifactId>
+									<version>${adempiere.version}</version>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/webstart</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack_root-webapp</id>
+						<!-- Taken from http://mojo.codehaus.org/webstart/webstart-maven-plugin/examples/war_bundle_1.html#single_webstart_app.html -->
+						<!-- Copy the webstart bundle in as a resource before packaging starts. -->
+						<phase>process-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.adempiere</groupId>
+									<artifactId>root-webapp</artifactId>
+									<version>${adempiere.version}</version>
+									<type>war</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<artifactItems>
-						<artifactItem>
-							<groupId>org.adempiere</groupId>
-							<artifactId>desktop-client-jnlp</artifactId>
-							<version>${adempiere.version}</version>
-							<type>zip</type>
-						</artifactItem>
-					</artifactItems>
-					<outputDirectory>${project.build.directory}/${project.build.finalName}/webstart</outputDirectory>
-				</configuration>
+
 			</plugin>
+
+
+
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<Class-Path>Adempiere.jar AdempiereSLib.jar adempiereApps.jar</Class-Path>
-						</manifestEntries>
-					</archive>
+				<!-- configuration>
 					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
-				</configuration>
+				</configuration -->
 			</plugin>
 		</plugins>
 		<finalName>adempiereRoot</finalName>

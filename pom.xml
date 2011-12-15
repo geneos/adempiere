@@ -68,7 +68,7 @@
 
 		<module>web-client/root-lib</module>
 		<module>desktop-client/client-jnlp</module>
-		<module>web-client/root-webapp</module>
+		<module>web-client/root-webfiles</module>
 		<module>web-client/apps-lib</module>
 		<module>web-client/apps-webapp</module>
 		<module>web-client/webcm-lib</module>
@@ -91,6 +91,7 @@
 		<module>assembly/webcm-ear</module>
 		<module>assembly/webstore-ear</module>
 		<module>assembly/jasperreports-ear</module>
+		<module>assembly/adempiere-root-webapp</module>
 		<module>assembly/adempiere-ear/incl-libs</module>
 		<module>assembly/adempiere-installer/incl-libs</module>
 		<module>assembly/adempiere-dist/jboss</module>

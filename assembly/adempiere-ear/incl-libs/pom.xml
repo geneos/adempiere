@@ -57,7 +57,7 @@
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>root-webapp</artifactId>
+			<artifactId>adempiere-root-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
 		</dependency>
@@ -112,7 +112,7 @@ The method getJspApplicationContext(ServletContext) is undefined for the type Js
 					<modules>
 						<webModule>
 							<groupId>org.adempiere</groupId>
-							<artifactId>root-webapp</artifactId>
+							<artifactId>adempiere-root-webapp</artifactId>
 							<contextRoot>/admin</contextRoot>
 						</webModule>
 						<webModule>
