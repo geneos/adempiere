@@ -3,6 +3,8 @@ build
 target
 
 desktop-client/client/Adempiere.properties
+extend/test.properties
+Adempiere.properties
 syntax: regexp
 ^.DS_Store$
 ^tools/.DS_Store$
