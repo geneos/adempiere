@@ -11,7 +11,7 @@
 		<groupId>org.adempiere</groupId>
 		<artifactId>adempiere</artifactId>
 		<version>3.7.0-FR3403603-SNAPSHOT</version>
-		<relativePath>../../../..</relativePath>
+		<relativePath>../../..</relativePath>
 	</parent>
 
 	<dependencies>
