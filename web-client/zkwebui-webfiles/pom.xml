@@ -1,9 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>zkwebui-webapp</artifactId>
+	<artifactId>zkwebui-webfiles</artifactId>
 	<packaging>war</packaging>
-	<name>ADempiere ERP - ZkWebUI War</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>
@@ -13,15 +12,6 @@
 		<relativePath>../..</relativePath>
 	</parent>
 
-	<dependencies>
-		<!-- Adempiere -->
-
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>zkwebui-lib</artifactId>
-			<version>${adempiere.version}</version>
-		</dependency>
-	</dependencies>
 
 	<build>
 		<plugins>
@@ -30,17 +20,13 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
 				<configuration>
-					<!-- 
-					<archive>
-						<manifestEntries>
-							<Class-Path>Adempiere.jar AdempiereSLib.jar adempiereApps.jar</Class-Path>
-						</manifestEntries>
-					</archive>
-					 -->
 					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
 				</configuration>
 			</plugin>
 		</plugins>
 		<finalName>webui</finalName>
 	</build>
+	<description>Contains the adempiere zkwebui webapp files *without libraries*.
+
+Important: The artifact created from this module is not functional! The functional web appliction is created in the assembly/adempiere-zkwebui-webapp module. This allows a customizer to assemble their own adempiereRoot with  customized client libs.</description>
 </project>

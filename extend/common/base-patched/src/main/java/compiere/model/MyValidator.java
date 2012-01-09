@@ -18,6 +18,9 @@ package compiere.model;
 
 import java.math.BigDecimal;
 
+import javax.mail.Message;
+import javax.servlet.Servlet;
+
 import org.compiere.model.MClient;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;

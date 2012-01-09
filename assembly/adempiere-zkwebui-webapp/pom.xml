@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>adempiere-root-webapp</artifactId>
+	<artifactId>zkwebui-webapp</artifactId>
 	<packaging>war</packaging>
-	<name>ADempiere ERP - Root War</name>
+	<name>ADempiere ERP - ZkWebUI War</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>
@@ -18,43 +18,13 @@
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>webroot-lib</artifactId>
+			<artifactId>zkwebui-lib</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
-
-		<!-- JNLP -->
-<!-- 
-VERY IMPORTANT:
-*Don't add desktop-client-jnlp as a dependency here. 
- It would cause all the swing client lib to end up in WEB-INF lib and bloating it wihout need. 
- As also jnp-client.jar would be part of the libs, the deployment of this war would fail with
- an "IncompatibleClassChangeError".
-*desktop-client-jnlp is handled directly in the build section.
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>desktop-client-jnlp</artifactId>
-			<version>${adempiere.version}</version>
-			<type>zip</type>
-		</dependency>
--->
-		<dependency>
-			<groupId>org.adempiere.jnlp</groupId>
-			<artifactId>jardiff</artifactId>
-			<version>1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.adempiere.jnlp</groupId>
-			<artifactId>jnlp-servlet</artifactId>
-			<version>1.0</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
 		<plugins>
-
-			<!-- Extract the zipped jnlp client into the 'webstart' directory -->
 			<plugin>
 				<!-- Taken from http://mojo.codehaus.org/webstart/webstart-maven-plugin/examples/war_bundle_1.html#single_webstart_app.html -->
 				<groupId>org.apache.maven.plugins</groupId>
@@ -62,26 +32,7 @@ VERY IMPORTANT:
 				<version>2.3</version>
 				<executions>
 					<execution>
-						<!-- Copy the webstart bundle in as a resource before packaging starts. -->
-						<phase>process-resources</phase>
-						<id>unpack_client-jnlp</id>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.adempiere</groupId>
-									<artifactId>desktop-client-jnlp</artifactId>
-									<version>${adempiere.version}</version>
-									<type>zip</type>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${project.build.directory}/${project.build.finalName}/webstart</outputDirectory>
-						</configuration>
-					</execution>
-					<execution>
-						<id>unpack_root-webapp</id>
+						<id>unpack_zkwebui-webfiles</id>
 						<!-- Taken from http://mojo.codehaus.org/webstart/webstart-maven-plugin/examples/war_bundle_1.html#single_webstart_app.html -->
 						<!-- Copy the webstart bundle in as a resource before packaging starts. -->
 						<phase>process-resources</phase>
@@ -92,7 +43,7 @@ VERY IMPORTANT:
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.adempiere</groupId>
-									<artifactId>root-webfiles</artifactId>
+									<artifactId>zkwebui-webfiles</artifactId>
 									<version>${adempiere.version}</version>
 									<type>war</type>
 								</artifactItem>
@@ -102,7 +53,6 @@ VERY IMPORTANT:
 					</execution>
 				</executions>
 			</plugin>
-			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -112,6 +62,6 @@ VERY IMPORTANT:
 				</configuration -->
 			</plugin>
 		</plugins>
-		<finalName>adempiereRoot</finalName>
+		<finalName>webui</finalName>
 	</build>
 </project>

@@ -2,6 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.adempiere</groupId>
 	<artifactId>adempiere</artifactId>
 	<packaging>pom</packaging>
@@ -56,14 +57,16 @@
 		<!-- Server -->
 
 		<module>server/server-lib</module>
+		
 		<module>server/server-ejb</module>
 		<module>server/glassfishfacet</module>
 		<module>server/jbossfacet</module>
 		<module>server/install</module>
 
 		<!-- Desktop Client -->
-		<module>desktop-client/client</module>
 
+		<module>desktop-client/client</module>
+		
 		<!-- Web Client -->
 
 		<module>web-client/root-lib</module>
@@ -76,7 +79,7 @@
 		<module>web-client/webstore-lib</module>
 		<module>web-client/webstore-webapp</module>
 		<module>web-client/zkwebui-lib</module>
-		<module>web-client/zkwebui-webapp</module>
+		<module>web-client/zkwebui-webfiles</module>
 
 		<!-- packages -->
   		<module>packages/client</module>
@@ -84,6 +87,7 @@
 		
 		<!-- Misc files and directories -->
 		<module>misc</module>
+		<module>migration</module>
 		<module>application-server/jboss</module>
  
 		<!-- Assemblies -->
@@ -92,6 +96,7 @@
 		<module>assembly/webstore-ear</module>
 		<module>assembly/jasperreports-ear</module>
 		<module>assembly/adempiere-root-webapp</module>
+		<module>assembly/adempiere-zkwebui-webapp</module>
 		<module>assembly/adempiere-ear/incl-libs</module>
 		<module>assembly/adempiere-installer/incl-libs</module>
 		<module>assembly/adempiere-dist/jboss</module>

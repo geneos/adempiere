@@ -9,51 +9,11 @@
 
 	<parent>
 		<groupId>org.adempiere</groupId>
-		<artifactId>adempiere</artifactId>
+		<artifactId>desktop-client-deps</artifactId>
 		<version>3.7.0-FR3403603-SNAPSHOT</version>
-		<relativePath>../..</relativePath>
+		<relativePath>.</relativePath>
 	</parent>
 
-	<dependencies>
-
-		<!-- Adempiere -->
-
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>base</artifactId>
-			<version>${adempiere.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>glassfish-facet</artifactId>
-			<version>${adempiere.version}</version>			
-			<scope>runtime</scope>
-		</dependency>		
-
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>jboss-facet</artifactId>
-			<version>${adempiere.version}</version>			
-			<scope>runtime</scope>
-		</dependency>			
-		
-		<!-- 
-			Should be here, but introduce a cyclic dependency. Moved on assemblies 
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>jasperreports-lib</artifactId>
-			<version>${adempiere.version}</version>			
-			<scope>runtime</scope>
-		</dependency>					
-		-->
-		
-		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>packages-client</artifactId>
-			<version>${adempiere.version}</version>
-			<scope>runtime</scope>
-		</dependency>
-
-	</dependencies>
+	<dependencies/>
+	
 </project>

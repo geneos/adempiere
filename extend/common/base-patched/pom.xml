@@ -1,0 +1,102 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.adempiere</groupId>
+		<artifactId>base-deps</artifactId>
+		<version>3.7.0-FR3403603-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>sw01_swat-base-patched</artifactId>
+
+	<url>http://maven.apache.org</url>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.adempiere</groupId>
+			<artifactId>base</artifactId>
+			<version>${adempiere.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<id>extract_base_java</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/base_java</outputDirectory>
+							<classifier>sources</classifier>
+							<includeGroupIds>org.adempiere</includeGroupIds>
+							<includeArtifactIds>base</includeArtifactIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>delete_duplicate_base_classes</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo
+									message="Deleting files from parent project that are to be overwritten in this project" />
+								<delete>
+									<fileset dir="${project.build.directory}/base_java"
+										includes="**/*">
+										<present targetdir="src/main/java" />
+									</fileset>
+								</delete>
+								
+								<delete file="target/base_java/org/compiere/dbPort/Convert_PostgreSQLTest.java"/>
+								<delete file="target/base_java/org/compiere/model/AccessSqlParserTest.java"/>
+							</target>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>add-parent-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/base_java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		
+	</build>
+
+</project>
