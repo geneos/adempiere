@@ -2,8 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>org.adempiere.web</groupId>
 	<artifactId>webstore-ear</artifactId>
 	<packaging>ear</packaging>
+	
 	<name>ADempiere ERP - WebStore Ear</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
@@ -19,7 +22,7 @@
 		<!-- Adempiere -->
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.web</groupId>
 			<artifactId>webstore-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
@@ -36,7 +39,7 @@
 				<configuration>
 					<modules>
 						<webModule>
-							<groupId>org.adempiere</groupId>
+							<groupId>org.adempiere.web</groupId>
 							<artifactId>webstore-webapp</artifactId>
 							<contextRoot>/</contextRoot>
 						</webModule>

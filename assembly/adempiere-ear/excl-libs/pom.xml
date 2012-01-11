@@ -27,7 +27,7 @@
 
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>desktop-client</artifactId>
+			<artifactId>swing-client</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
 

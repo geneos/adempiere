@@ -19,15 +19,15 @@
 		<!-- Adempiere -->
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.common</groupId>
 			<artifactId>base</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
 
 		<dependency>
 			<!-- required for ZK -->
-			<groupId>org.adempiere</groupId>
-			<artifactId>desktop-client</artifactId>
+			<groupId>org.adempiere.desktop</groupId>
+			<artifactId>swing-client</artifactId>
 			<version>${adempiere.version}</version>
 			<exclusions>
 				<!-- 
@@ -42,28 +42,28 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.jasper</groupId>
 			<artifactId>jasperreports-lib</artifactId>
 			<version>${adempiere.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.server</groupId>
 			<artifactId>server-ejb</artifactId>
 			<version>${adempiere.version}</version>
 			<type>ejb</type>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.web</groupId>
 			<artifactId>adempiere-root-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.web</groupId>
 			<artifactId>apps-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
@@ -86,14 +86,14 @@ The method getJspApplicationContext(ServletContext) is undefined for the type Js
 		</dependency>
  -->
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.web</groupId>
 			<artifactId>webcm-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.web</groupId>
 			<artifactId>zkwebui-webapp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>war</type>
@@ -111,22 +111,22 @@ The method getJspApplicationContext(ServletContext) is undefined for the type Js
 					<includeLibInApplicationXml>true</includeLibInApplicationXml>
 					<modules>
 						<webModule>
-							<groupId>org.adempiere</groupId>
+							<groupId>org.adempiere.web</groupId>
 							<artifactId>adempiere-root-webapp</artifactId>
 							<contextRoot>/admin</contextRoot>
 						</webModule>
 						<webModule>
-							<groupId>org.adempiere</groupId>
+							<groupId>org.adempiere.web</groupId>
 							<artifactId>apps-webapp</artifactId>
 							<contextRoot>/adempiere</contextRoot>
 						</webModule>
 						<webModule>
-							<groupId>org.adempiere</groupId>
+							<groupId>org.adempiere.web</groupId>
 							<artifactId>webcm-webapp</artifactId>
 							<contextRoot>/</contextRoot>
 						</webModule>
 						<webModule>
-							<groupId>org.adempiere</groupId>
+							<groupId>org.adempiere.web</groupId>
 							<artifactId>zkwebui-webapp</artifactId>
 							<contextRoot>/webui</contextRoot>
 						</webModule>

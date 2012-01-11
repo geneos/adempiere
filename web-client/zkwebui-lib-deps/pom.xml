@@ -2,8 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>org.adempiere.web</groupId>
 	<artifactId>zkwebui-lib-deps</artifactId>
 	<packaging>pom</packaging>
+	
 	<name>ADempiere ERP - ZkWebUI Dependencies</name>
 
 	<parent>
@@ -28,28 +31,28 @@
 		<!-- Adempiere -->
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.common</groupId>
 			<artifactId>base</artifactId>
 			<version>${adempiere.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>desktop-client</artifactId>
+			<groupId>org.adempiere.desktop</groupId>
+			<artifactId>swing-client</artifactId>
 			<version>${adempiere.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.jasper</groupId>
 			<artifactId>jasperreports-lib</artifactId>
 			<version>${adempiere.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.common</groupId>
 			<artifactId>patched-ecs</artifactId>
 			<version>${adempiere.version}</version>
 			<scope>provided</scope>

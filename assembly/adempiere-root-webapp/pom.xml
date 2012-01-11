@@ -1,8 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>org.adempiere.web</groupId>
 	<artifactId>adempiere-root-webapp</artifactId>
 	<packaging>war</packaging>
+	
 	<name>ADempiere ERP - Root War</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
@@ -17,7 +20,7 @@
 		<!-- Adempiere -->
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.web</groupId>
 			<artifactId>webroot-lib</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
@@ -32,7 +35,7 @@ VERY IMPORTANT:
 *desktop-client-jnlp is handled directly in the build section.
 		<dependency>
 			<groupId>org.adempiere</groupId>
-			<artifactId>desktop-client-jnlp</artifactId>
+			<artifactId>swing-client-jnlp</artifactId>
 			<version>${adempiere.version}</version>
 			<type>zip</type>
 		</dependency>
@@ -71,8 +74,8 @@ VERY IMPORTANT:
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.adempiere</groupId>
-									<artifactId>desktop-client-jnlp</artifactId>
+									<groupId>org.adempiere.desktop</groupId>
+									<artifactId>swing-client-jnlp</artifactId>
 									<version>${adempiere.version}</version>
 									<type>zip</type>
 								</artifactItem>
@@ -91,7 +94,7 @@ VERY IMPORTANT:
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.adempiere</groupId>
+									<groupId>org.adempiere.web</groupId>
 									<artifactId>root-webfiles</artifactId>
 									<version>${adempiere.version}</version>
 									<type>war</type>

@@ -5,13 +5,13 @@
 		<groupId>org.adempiere</groupId>
 		<version>3.7.0-FR3403603-SNAPSHOT</version>
 	</parent>
+	
 	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>org.adempiere.migration</groupId>
 	<artifactId>migration</artifactId>
 	<packaging>jar</packaging>
 
-	<dependencies>
-	</dependencies>
-	
 	<build>
 		<plugins>
 			<plugin>

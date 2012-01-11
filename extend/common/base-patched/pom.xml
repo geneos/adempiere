@@ -15,7 +15,7 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.common</groupId>
 			<artifactId>base</artifactId>
 			<version>${adempiere.version}</version>
 			<type>jar</type>
@@ -40,7 +40,7 @@
 						<configuration>
 							<outputDirectory>${project.build.directory}/base_java</outputDirectory>
 							<classifier>sources</classifier>
-							<includeGroupIds>org.adempiere</includeGroupIds>
+							<includeGroupIds>org.adempiere.common</includeGroupIds>
 							<includeArtifactIds>base</includeArtifactIds>
 						</configuration>
 					</execution>

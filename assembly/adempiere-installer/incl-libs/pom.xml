@@ -2,8 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>org.adempiere.server</groupId>
 	<artifactId>installer-incl-libs</artifactId>
 	<packaging>jar</packaging>
+	
 	<name>ADempiere ERP - Installer with included dependencies</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
@@ -18,32 +21,32 @@
 
 		<!-- Adempiere -->
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.server</groupId>
 			<artifactId>install</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.common</groupId>
 			<artifactId>base</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>desktop-client</artifactId>
+			<groupId>org.adempiere.desktop</groupId>
+			<artifactId>swing-client</artifactId>
 			<version>${adempiere.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.server</groupId>
 			<artifactId>jboss-facet</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.server</groupId>
 			<artifactId>glassfish-facet</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>

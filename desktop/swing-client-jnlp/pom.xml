@@ -2,8 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>desktop-client-jnlp</artifactId>
+	
+	<groupId>org.adempiere.desktop</groupId>
+	<artifactId>swing-client-jnlp</artifactId>
 	<packaging>jar</packaging>
+	
 	<name>ADempiere ERP - Desktop Client WebStart</name>
 	<description>ADempiere desktop-client, zipped as as WebStart (JNLP) application</description>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
@@ -20,13 +23,13 @@
 		<!-- Adempiere -->
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
-			<artifactId>desktop-client</artifactId>
+			<groupId>org.adempiere.desktop</groupId>
+			<artifactId>swing-client</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.jasper</groupId>
 			<artifactId>jasperreports-lib</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>

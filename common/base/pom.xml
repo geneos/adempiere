@@ -8,10 +8,10 @@
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
 	<parent>
-		<groupId>org.adempiere</groupId>
+		<groupId>org.adempiere.common</groupId>
 		<artifactId>base-deps</artifactId>
 		<version>3.7.0-FR3403603-SNAPSHOT</version>
-		<relativePath>.</relativePath>
+		<relativePath>../base-deps</relativePath>
 	</parent>
 
 	<dependencies/>

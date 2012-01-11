@@ -45,19 +45,19 @@
 
 		<!-- Common Modules -->
 
-		<module>common/patched-ecs</module>		
+		<module>common/patched-ecs</module>
+		<module>common/base-deps</module>	
 		<module>common/base</module>		
 		
 		<!-- Jasper Reports -->
 
-		<module>jasperreports/jasperreports-lib</module>
-		<module>jasperreports/jasperreports-ejb</module>
-		<module>jasperreports/jasperreports-webapp</module>
+		<module>jasper/jasperreports-lib</module>
+		<module>jasper/jasperreports-ejb</module>
+		<module>jasper/jasperreports-webapp</module>
 		
 		<!-- Server -->
 
 		<module>server/server-lib</module>
-		
 		<module>server/server-ejb</module>
 		<module>server/glassfishfacet</module>
 		<module>server/jbossfacet</module>
@@ -65,12 +65,13 @@
 
 		<!-- Desktop Client -->
 
-		<module>desktop-client/client</module>
+		<module>desktop/swing-client-deps</module>
+		<module>desktop/swing-client</module>
+		<module>desktop/swing-client-jnlp</module>
 		
 		<!-- Web Client -->
 
 		<module>web-client/root-lib</module>
-		<module>desktop-client/client-jnlp</module>
 		<module>web-client/root-webfiles</module>
 		<module>web-client/apps-lib</module>
 		<module>web-client/apps-webapp</module>
@@ -107,7 +108,8 @@
 	</dependencies>
 
 	<build>
-
+		<finalName>${project.groupId}.${project.artifactId}</finalName>
+		
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -166,8 +168,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
-	
+		
 	<reporting>
 		<plugins>
 			<plugin>

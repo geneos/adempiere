@@ -1,8 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>org.adempiere.web</groupId>
 	<artifactId>webcm-webapp</artifactId>
 	<packaging>war</packaging>
+	
 	<name>ADempiere ERP - WebCM War</name>
 	<url>http://www.adempiere.com/ADempiere_ERP</url>
 
@@ -17,7 +20,7 @@
 		<!-- Adempiere -->
 
 		<dependency>
-			<groupId>org.adempiere</groupId>
+			<groupId>org.adempiere.web</groupId>
 			<artifactId>webcm-lib</artifactId>
 			<version>${adempiere.version}</version>
 		</dependency>
@@ -30,11 +33,11 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
 				<configuration>
-					<archive>
+					<!-- archive>
 						<manifestEntries>
 							<Class-Path>Adempiere.jar AdempiereSLib.jar adempiereApps.jar</Class-Path>
 						</manifestEntries>
-					</archive>
+					</archive -->
 					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
 				</configuration>
 			</plugin>
