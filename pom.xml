@@ -71,16 +71,16 @@
 		
 		<!-- Web Client -->
 
-		<module>web-client/root-lib</module>
-		<module>web-client/root-webfiles</module>
-		<module>web-client/apps-lib</module>
-		<module>web-client/apps-webapp</module>
-		<module>web-client/webcm-lib</module>
-		<module>web-client/webcm-webapp</module>
-		<module>web-client/webstore-lib</module>
-		<module>web-client/webstore-webapp</module>
-		<module>web-client/zkwebui-lib</module>
-		<module>web-client/zkwebui-webfiles</module>
+		<module>web/root-lib</module>
+		<module>web/root-webfiles</module>
+		<module>web/apps-lib</module>
+		<module>web/apps-webapp</module>
+		<module>web/webcm-lib</module>
+		<module>web/webcm-webapp</module>
+		<module>web/webstore-lib</module>
+		<module>web/webstore-webapp</module>
+		<module>web/zkwebui-lib</module>
+		<module>web/zkwebui-webfiles</module>
 
 		<!-- packages -->
   		<module>packages/client</module>
