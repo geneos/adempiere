@@ -108,7 +108,8 @@
 	</dependencies>
 
 	<build>
-		<finalName>${project.groupId}.${project.artifactId}</finalName>
+		<!-- build artifacts should also contain the groupId -->
+		<finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
 		
 		<pluginManagement>
 			<plugins>
