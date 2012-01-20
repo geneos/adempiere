@@ -13,6 +13,10 @@
  * For the text or an alternative of this public license, you may reach us    *
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
+ * @author Jorg Janke                                                         *
+ * @author Tobias Schoeneberg, t.schoeneber@metas.de                          *
+ *   FR[3476691] Evaluate AD_Process.AD_Form_ID when starting a process from menu tree *
+ *   https://adempiere.atlassian.net/browse/ADEMPIERE-7                       *
  *****************************************************************************/
 package org.compiere.apps;
 
@@ -20,18 +24,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Properties;
 import java.util.logging.Level;
 
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.compiere.apps.form.FormFrame;
+import org.compiere.model.I_AD_Process;
+import org.compiere.model.MProcess;
 import org.compiere.model.MTask;
+import org.compiere.process.ProcessInfo;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Ini;
 import org.compiere.util.Msg;
+import org.compiere.util.Util;
 
 
 /**
@@ -173,7 +182,7 @@ public class AMenuStartItem extends Thread implements ActionListener
 				else if (Action.equals("X"))		//	Form
 				{
 					cmd = rs.getInt("AD_Form_ID");
-					startForm(cmd);
+					startForm(cmd, null);
 				}
 				else
 					log.log(Level.SEVERE, "No valid Action in ID=" + m_ID);
@@ -279,24 +288,33 @@ public class AMenuStartItem extends Thread implements ActionListener
 		 */
 		private void startProcess (int AD_Process_ID, String IsSOTrx)
 		{
-			SwingUtilities.invokeLater(m_updatePB);			//	1
-			boolean isSO = false;
-			if (IsSOTrx != null && IsSOTrx.equals("Y"))
-				isSO = true;
-			m_timer.stop();
-			ProcessDialog pd = new ProcessDialog (m_menu.getGraphicsConfiguration(), AD_Process_ID, isSO);
-			if (!pd.init())
-				return;
-			m_timer.start();
-			m_menu.getWindowManager().add(pd);
-
-			SwingUtilities.invokeLater(m_updatePB);			//	2
-			pd.getContentPane().invalidate();
-			pd.getContentPane().validate();
-			pd.pack();
-			//	Center the window
-			SwingUtilities.invokeLater(m_updatePB);			//	3
-			AEnv.showCenterScreen(pd);
+			// Begin FR[3476691]
+			final MProcess process = new MProcess(Env.getCtx(), AD_Process_ID, null);
+			if(process.getAD_Form_ID() > 0)
+			{
+				startForm(process.getAD_Form_ID(), process);
+			}
+			else
+			{ // End FR[3476691]
+				SwingUtilities.invokeLater(m_updatePB);			//	1
+				boolean isSO = false;
+				if (IsSOTrx != null && IsSOTrx.equals("Y"))
+					isSO = true;
+				m_timer.stop();
+				ProcessDialog pd = new ProcessDialog (m_menu.getGraphicsConfiguration(), AD_Process_ID, isSO);
+				if (!pd.init())
+					return;
+				m_timer.start();
+				m_menu.getWindowManager().add(pd);
+	
+				SwingUtilities.invokeLater(m_updatePB);			//	2
+				pd.getContentPane().invalidate();
+				pd.getContentPane().validate();
+				pd.pack();
+				//	Center the window
+				SwingUtilities.invokeLater(m_updatePB);			//	3
+				AEnv.showCenterScreen(pd);
+			}
 		}	//	startProcess
 
 	/**
@@ -321,9 +339,12 @@ public class AMenuStartItem extends Thread implements ActionListener
 
 	/**
 	 *	Start Form
+	 *
 	 *  @param AD_Form_ID form
+	 *  @param process optional. 
+	 *  			If != null, then we assume that process.getAD_Form_ID()==AD_Form_ID, we create a ProcessInfo instance for process and add if to the form before opening it. 
 	 */
-	private void startForm (int AD_Form_ID)
+	private void startForm (int AD_Form_ID, final I_AD_Process process)
 	{
 		FormFrame ff = null;
 		if (Ini.isPropertyBool(Ini.P_SINGLE_INSTANCE_PER_WINDOW)) {
@@ -334,6 +355,18 @@ public class AMenuStartItem extends Thread implements ActionListener
 			}
 		}
 		ff = new FormFrame(m_menu.getGraphicsConfiguration());
+		
+		if(process != null) // Begin FR[3476691]
+		{
+			Util.assume(process.getAD_Form_ID() == AD_Form_ID, "Param 'AD_Form_ID' is consistent with param 'process'");
+			final Properties ctx = Env.getCtx();
+			
+			final ProcessInfo pi = new ProcessInfo (m_name, process.getAD_Process_ID());
+			pi.setAD_User_ID (Env.getAD_User_ID(ctx));
+			pi.setAD_Client_ID (Env.getAD_Client_ID(ctx));
+			ff.setProcessInfo(pi);
+		} // End FR[3476691]
+		
 		SwingUtilities.invokeLater(m_updatePB);			//	1
 		boolean ok = ff.openForm(AD_Form_ID);
 		if (!ok) {
