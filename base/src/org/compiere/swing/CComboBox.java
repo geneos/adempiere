@@ -937,8 +937,11 @@ public class CComboBox extends JComboBox
 			public void run()
 			{
 				hidePopup();
-				getParent().validate();
-				getParent().repaint();
+				try {
+					getParent().validate();
+					getParent().repaint();
+				}
+				catch (Exception e) {}
 				showPopup();
 			}
 		};
