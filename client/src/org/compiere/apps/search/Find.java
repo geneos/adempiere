@@ -338,6 +338,8 @@ public final class Find extends CDialog
 	private CComboBox rightBrackets;
 
 	private CComboBox andOr;
+	private int m_oldNameIndex = -1;
+	private boolean m_queryNameNeedsSave=false;
 	
 	private static final String FIELD_SEPARATOR = "<^>";
 	private static final String SEGMENT_SEPARATOR = "<~>";
@@ -371,6 +373,7 @@ public final class Find extends CDialog
 		fQueryName.setToolTipText (Msg.getMsg(Env.getCtx(),"QueryName"));
 		fQueryName.setEditable(true);
 		fQueryName.addActionListener(this);
+		fQueryName.setAutoReducible(false); //  Incompatible with adding a new entry
 		bSave.setIcon(new ImageIcon(org.compiere.Adempiere.class.getResource("images/Save24.gif")));
 		bSave.setMargin(new Insets(2, 2, 2, 2));
 		bSave.setToolTipText(Msg.getMsg(Env.getCtx(),"Save"));
@@ -840,7 +843,9 @@ public final class Find extends CDialog
 		else if (e.getSource() == bNew)
 			cmd_new();
 		else if (e.getSource() == bSave)
+		{
 			cmd_save(true);
+		}
 		else if (e.getSource() == bDelete)
 			cmd_delete();
 		//
@@ -874,8 +879,24 @@ public final class Find extends CDialog
 		}
 		else if (e.getSource() == fQueryName) 
 		{
-			int index = fQueryName.getSelectedIndex();
-			if(index < 0) return;
+			//  Combo Box changing by selection of typing of new name
+			int index = fQueryName.getSelectedIndex();  // Will return -1 if there is no match but will point to the last selection
+			Object name = fQueryName.getSelectedItem();
+			String displayName = fQueryName.getEditor().getItem().toString();  //  The text in the entry
+			if (displayName != null && name != null && displayName.length()>0 && !displayName.equals(name.toString())) //  Possible new entry?
+			{
+				m_queryNameNeedsSave = true;  // Flag used to save queries before confirm
+			}
+			else
+			{
+				displayName = "";
+				m_queryNameNeedsSave = false;
+			}
+			//  No items or change in selection (yet)
+			if(index < 0 || index == m_oldNameIndex ) return;
+			
+			m_oldNameIndex = index;
+			
 			if(index == 0) { // no query - wipe and start over.
 				advancedTable.stopEditor(false);
 				DefaultTableModel model = (DefaultTableModel)advancedTable.getModel();
@@ -887,7 +908,7 @@ public final class Find extends CDialog
 				}
 				advancedTable.requestFocusInWindow();
 			}
-			else parseUserQuery(userQueries[index-1]);
+			else parseUserQuery(userQueries[index-1]); //  Assumes the combo box order has not changed.
 		}
 		else    // ConfirmPanel.A_OK and enter in fields
 		{
@@ -1099,7 +1120,7 @@ public final class Find extends CDialog
 		m_isCancel = false; // teo_sarca [ 1708717 ]
 		//	save pending
 		if (bSave.isEnabled())
-			cmd_save(false);
+			cmd_save(m_queryNameNeedsSave);
 		if (getNoOfRecords(m_query, true) != 0)
 			dispose();
 	}	//	cmd_ok_Advanced
@@ -1264,12 +1285,17 @@ public final class Find extends CDialog
 				
 			}
 		}
+		String qName = fQueryName.getEditor().getItem().toString(); //  Has to include any entered data that hasn't been added to the combo box yet.
 		Object selected = fQueryName.getSelectedItem();
 		
-		if (selected != null) {
+		log.fine("Selected Item: " + selected.toString() + " name: " + qName);
+		if (selected != null  && qName.length() > 0) {
 			String name = selected.toString();
-			if ((fQueryName.getSelectedIndex() == 0 || name.equals(m_sLast) || Util.isEmpty(name, true)) && saveQuery){ // New query - needs a name
-
+			if (!name.equals(qName)) {
+				name = qName;  // Use the new name
+			}
+			if ((fQueryName.getSelectedIndex() == 0 || name.equals(m_sLast) || name.equals(m_sNew) || Util.isEmpty(name, true)) && saveQuery){ 
+				// New query - needs a non null, non protected name
 				ADialog.warn(m_targetWindowNo, this, "FillMandatory", Msg.translate(Env.getCtx(), "Name"));
 				return;
 			}
@@ -1333,7 +1359,7 @@ public final class Find extends CDialog
 	{
 		String value = m_sLast; 
 		if (fQueryName.getItemCount()>0){ // The list is initialized
-			value = fQueryName.getValue().toString();
+			value = fQueryName.getEditor().getItem().toString();
 		}
 		userQueries = MUserQuery.get(Env.getCtx(), m_AD_Tab_ID);
 		fQueryName.removeAllItems();
