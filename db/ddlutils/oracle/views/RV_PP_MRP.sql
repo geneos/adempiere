@@ -1,3 +1,6 @@
+DROP VIEW rv_pp_mrp_demand;
+DROP VIEW rv_pp_mrp_supply;
+DROP VIEW rv_pp_mrp_detail_supply;
 DROP VIEW rv_pp_mrp;
 CREATE OR REPLACE VIEW rv_pp_mrp AS 
 SELECT 
@@ -11,6 +14,11 @@ mrp.isavailable,
 mrp.updated,
 mrp.updatedby,
 pp.ismps,
+pp.IsRequiredMRP,
+pp.IsRequiredDRP,
+p.IsBOM,
+p.IsPurchased,
+p.M_Product_Category_ID,
 mrp.name,
 mrp.description,
 mrp.c_order_id,
@@ -43,11 +51,13 @@ mrp.typemrp,
 p.LowLevel,
 mrp.C_BPartner_ID,
 mrp.version,
-documentNo(mrp.pp_mrp_id) AS documentNo
+documentNo(mrp.pp_mrp_id) AS documentNo,
+mrp.c_project_id,
+mrp.c_projectphase_id,
+mrp.c_projecttask_id
 FROM pp_mrp mrp
 INNER JOIN M_Product p ON (mrp.M_Product_ID = p.M_Product_ID)
-LEFT JOIN pp_product_planning pp ON (pp.m_product_id = mrp.m_product_id AND mrp.m_warehouse_id = pp.m_warehouse_id)
-WHERE mrp.Qty<>0
+LEFT JOIN pp_product_planning pp ON (pp.m_product_id = mrp.m_product_id AND mrp.m_warehouse_id = pp.m_warehouse_id) WHERE mrp.Qty<>0
 UNION
 SELECT 
 0 ,
@@ -60,6 +70,11 @@ pp.isactive,
 pp.updated,
 pp.updatedby,
 pp.ismps,
+pp.IsRequiredMRP,
+pp.IsRequiredDRP,
+p.IsBOM,
+p.IsPurchased,
+p.M_Product_Category_ID,
 null, --name
 null, --description
 null, --mrp.c_order_id
@@ -93,6 +108,9 @@ p.LowLevel,
 null, --C_BPartner_ID
 null,
 CAST('Safety Stock' AS nvarchar2(80))   --documentNo(mrp.pp_mrp_id) AS documentNo
+null,
+null,
+null
 FROM pp_product_planning pp 
 INNER JOIN M_Product p ON (pp.M_Product_ID = p.M_Product_ID)
 WHERE bomqtyonhand(pp.M_Product_ID,pp.M_Warehouse_ID, 0) < pp.safetystock 
