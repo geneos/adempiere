@@ -636,7 +636,7 @@ public class MDDOrder extends X_DD_Order implements DocAction
 		if (getC_BPartner_ID() == 0)
 			setBPartner(MBPartner.getTemplate(getCtx(), getAD_Client_ID()));
 		if (getC_BPartner_Location_ID() == 0)
-			setBPartner(new MBPartner(getCtx(), getC_BPartner_ID(), null));
+			setBPartner(new MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName()));
 
 
 		//	Default Sales Rep
