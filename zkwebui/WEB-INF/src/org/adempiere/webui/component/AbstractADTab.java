@@ -158,8 +158,10 @@ public abstract class AbstractADTab extends AbstractUIPart implements IADTab
 			{
 				parents.add(0);
 			}
-
+			//It not is necessary because GridField.updateContext() warranty that context is right, so that is better using the same approach that in Swing Client
+			//The issue that cause this code is that you can remove some variable of context that is important for behavior of ADempiere as IsSOTrx
 			//clear context
+			/*
 			for (int i = 0; i < tabPanelList.size(); i++)
 			{
 				IADTabpanel adtab = tabPanelList.get(i);
@@ -171,6 +173,7 @@ public abstract class AbstractADTab extends AbstractUIPart implements IADTab
 					Env.setContext(Env.getCtx(), gf.getWindowNo(),  gf.getColumnName(), "");
 				}
 			}
+			*/
 
 			//add parent value to context
 			if (!parents.isEmpty())
