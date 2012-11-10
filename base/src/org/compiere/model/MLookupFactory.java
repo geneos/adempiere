@@ -463,8 +463,11 @@ public class MLookupFactory
 		if (WhereClause != null && WhereClause.length() > 0)
 		{
 			String where = WhereClause;
-			if (where.indexOf('@') != -1)
-				where = Env.parseContext(ctx, WindowNo, where, false);
+			//the cache not to should save with the context variable parse
+			//in zkweui the server cache is global , 
+			//So the context variables should be parsed by session
+			//if (where.indexOf('@') != -1)
+			//	where = Env.parseContext(ctx, WindowNo, where, false);
 			if (where.length() == 0 && WhereClause.length() != 0)
 				s_log.severe ("Could not resolve: " + WhereClause);
 
