@@ -154,6 +154,9 @@ public class ColumnElementHandler extends AbstractElementHandler {
 					.getValue("isTranslated")).booleanValue()));
 			m_Column.setIsUpdateable((Boolean.valueOf(atts
 					.getValue("isUpdateable")).booleanValue()));
+			m_Column.setIsAutocomplete((Boolean.valueOf(atts
+					.getValue("IsAutocomplete")).booleanValue()));
+			
 			m_Column.setName(atts.getValue("Name"));
 			m_Column.setReadOnlyLogic(getStringValue(atts, "ReadOnlyLogic"));
 
@@ -501,6 +504,8 @@ public class ColumnElementHandler extends AbstractElementHandler {
 				.isTranslated() == true ? "true" : "false"));
 		atts.addAttribute("", "", "isUpdateable", "CDATA", (m_Column
 				.isUpdateable() == true ? "true" : "false"));
+		atts.addAttribute("", "", "isAutocomplete", "CDATA", (m_Column
+				.isAutocomplete() == true ? "true" : "false"));
 		atts.addAttribute("", "", "Name", "CDATA",
 				(m_Column.getName() != null ? m_Column.getName() : ""));
 		atts.addAttribute("", "", "getIsSyncDatabase", "CDATA", "Y");
