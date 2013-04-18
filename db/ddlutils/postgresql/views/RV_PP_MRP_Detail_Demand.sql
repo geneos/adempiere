@@ -19,6 +19,11 @@ demand.Priority,
 demand.S_Resource_ID,
 demand.M_Warehouse_ID,
 demand.C_BPartner_ID,
-demand.Planner_ID
+demand.Planner_ID,
+demand.C_Project_ID,
+demand.C_ProjectPhase_ID,
+demand.C_ProjectTask_ID,
+demand.DateStartSchedule,
+demand.DateFinishSchedule
 FROM PP_MRP_Detail mrp_detail
 LEFT JOIN RV_PP_MRP demand ON (demand.PP_MRP_ID=mrp_detail.MRP_demand_ID);

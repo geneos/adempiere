@@ -1,6 +1,7 @@
 --DROP VIEW rv_pp_mrp_demand;
 --DROP VIEW rv_pp_mrp_supply;
 --DROP VIEW rv_pp_mrp_detail_supply;
+--DROP VIEW rv_pp_mrp_detail_demand;
 --DROP VIEW rv_pp_mrp;
 CREATE OR REPLACE VIEW rv_pp_mrp AS 
 SELECT 
@@ -19,6 +20,7 @@ pp.IsRequiredDRP,
 p.IsBOM,
 p.IsPurchased,
 p.M_Product_Category_ID,
+p.M_AttributeSetInstance_ID,
 mrp.name,
 mrp.description,
 mrp.c_order_id,
@@ -75,6 +77,7 @@ pp.IsRequiredDRP,
 p.IsBOM,
 p.IsPurchased,
 p.M_Product_Category_ID,
+p.M_AttributeSetInstance_ID,
 null, --name
 null, --description
 null, --mrp.c_order_id
