@@ -1940,7 +1940,6 @@ mrp.S_Resource_ID ,
 mrp.M_Warehouse_ID , 
 mrp.DateOrdered,
 mrp.DatePromised,
-mrp.DateStartSchedule,
 mrp.Priority , 
 mrp.M_Product_ID,
 p.M_AttributeSetInstance_ID,
@@ -1979,7 +1978,6 @@ mrp.S_Resource_ID ,
 mrp.M_Warehouse_ID , 
 mrp.DateOrdered,
 mrp.DatePromised,
-mrp.DateStartSchedule,
 mrp.Priority, 
 mrp.M_Product_ID,
 p.M_AttributeSetInstance_ID,
@@ -2028,8 +2026,6 @@ demand.DateFinishSchedule
 FROM PP_MRP_Detail mrp_detail
 LEFT JOIN RV_PP_MRP demand ON (demand.PP_MRP_ID=mrp_detail.MRP_demand_ID);
 
-
-DROP VIEW RV_PP_MRP_Detail_Supply;
 CREATE VIEW RV_PP_MRP_Detail_Supply AS
 SELECT
 mrp_detail.AD_Client_ID,
